@@ -1,0 +1,15 @@
+ablation,finding_kind,scored_total,tp,zd,fp,precision_tp_plus_zd
+B0,multi_var_cross_contract,361,143,2,216,0.401662049861
+B0,single_var_cross_tx,750,185,5,560,0.253333333333
+B1,multi_var_cross_contract,382,144,3,235,0.384816753927
+B1,single_var_cross_tx,759,188,5,566,0.254281949934
+B2,multi_var_cross_contract,387,143,2,242,0.374677002584
+B2,single_var_cross_tx,762,181,5,576,0.244094488189
+B3,multi_var_cross_contract,471,177,1,293,0.377919320594
+B3,single_var_cross_tx,766,177,5,584,0.237597911227
+B4,multi_var_cross_contract,230,105,0,125,0.456521739130
+B4,single_var_cross_tx,180,47,0,133,0.261111111111
+B5,multi_var_cross_contract,0,0,0,0,
+B5,single_var_cross_tx,0,0,0,0,
+B6,multi_var_cross_contract,364,136,3,225,0.381868131868
+B6,single_var_cross_tx,769,182,5,582,0.243172951886

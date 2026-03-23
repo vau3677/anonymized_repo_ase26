@@ -1,0 +1,8 @@
+ablation,excluded_total_keys,excluded_mock_keys,excluded_test_keys,excluded_out_of_scope_keys,excluded_other_keys,excluded_unlabeled_keys,excluded_nonlabel_rows_raw
+B0,481,166,148,26,140,1,481
+B1,496,166,163,27,139,1,496
+B2,479,165,151,27,135,1,479
+B3,528,201,150,33,142,2,528
+B4,279,92,134,10,41,2,279
+B5,0,0,0,0,0,0,0
+B6,486,165,149,25,146,1,486
