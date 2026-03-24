@@ -18,7 +18,7 @@ SKIP_DIRS = {
     "deployments", "deploy", "broadcast", "flattened", "flats", "coverage", "coverage-data",
     "coverage-ts", "coverage-sol", "lcov-report", "reports", "report", "gas-snapshot",
     "gas-snapshots", "traces", "trace", "cache_broadcast", "brand-assets", "customswap",
-    "tge", "vesting", "royalty-vault", "vader-bond"
+    "tge", "vesting", "royalty-vault", "vader-bond",
     ".git", ".github", ".gitlab", ".gitlab-ci", ".circleci", ".husky", ".vscode", ".idea",
     ".devcontainer", ".codesandbox", ".editorconfig", ".prettier", ".prettier-cache",
     ".eslintcache", ".cache", ".parcel-cache",
