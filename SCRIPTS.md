@@ -18,6 +18,7 @@ This document describes scripts in this repository: what they do, how they work 
 - [dataset/fails.py](#datasetfailspy)
 - [dataset/tools/remove_failed_detections.py](#datasettoolsremovefaileddetectionspy)
 - [dataset/tests_left.py](#datasettestsleftpy)
+- [evaluation/master.py](#evaluationmasterpy)
 
 ---
 
@@ -349,3 +350,29 @@ python3 dataset/tests_left.py
 
 **Important notes:**
 - It does not verify whether all ablations were completed, only those which have not yet been scanned.
+
+---
+
+## evaluation/master.py
+
+**Purpose:** This script reproduces the 7 core CSV artifacts:
+  - normalized_rows.csv
+  - master_ablation_table.csv
+  - master_by_kind.csv
+  - master_exclusions.csv
+  - master_conflicts.csv
+  - master_union_coverage.csv
+  - runtime_summary.csv
+
+**Usage:**
+
+```bash
+python3 evaluation/master.py \
+  --xlsx path/to/MV-Bench.xlsx \
+  --results "path/to/results.tsv" \
+  --ablation-map "/path/to/ablation_map.tsv" \
+  --out "evaluation/validation/"
+```
+
+**Notes:**
+- `evaluation/validation` is a folder we suggest instantiating for direct comparison to our results.
