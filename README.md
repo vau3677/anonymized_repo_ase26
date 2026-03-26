@@ -8,9 +8,9 @@ This repository contains the source code for the **MV-Scan** tool, the analysis 
 mv-scan-research-artifacts/
 ├── dataset/             # Python script to run the ablation study
 │   └── Web3Bugs/        # Dataset we run MV-Scan on
-├── evaluation/          # Scripts to evaluate results
-└── slither-si-detector/ # Source code for the MV-Scan tool
-                         #  /slither/detectors/inconsistent_state
+├── evaluation/          # Scripts to evaluate results with accompanying results
+├── MV-Bench.xlsx        # Our full annotated benchmark with all alarms and audit notes
+└── slither-si-detector/ # Source code for the MV-Scan tool is in /slither/detectors/inconsistent_state
 ```
 
 ## MV-Scan Tool

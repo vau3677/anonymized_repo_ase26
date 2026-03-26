@@ -1,0 +1,428 @@
+repo		ablation	contracts/scan/results elapsed time
+10/contracts	baseline	54c/1/9r (rc=255)	11.306	255
+10/contracts	no_init_only	54c/1/9r (rc=255)	13.546	255
+10/contracts	no_admin_benign	54c/1/9r (rc=255)	12.312	255
+10/contracts	sink_none	54c/1/19r (rc=255)	12.885	255
+10/contracts	sink_samevar	54c/1/19r (rc=255)	11.657	255
+10/contracts	budget_0	54c/1/0r	13.572	0
+10/contracts	budget_inf	54c/1/9r (rc=255)	12.070	255
+100	baseline	42c/1/2r (rc=255)	19.245	255
+100	no_init_only	42c/1/2r (rc=255)	19.338	255
+100	no_admin_benign	42c/1/2r (rc=255)	18.762	255
+100	sink_none	42c/1/2r (rc=255)	17.807	255
+100	sink_samevar	42c/1/1r (rc=255)	18.511	255
+100	budget_0	42c/1/0r	20.474	0
+100	budget_inf	42c/1/2r (rc=255)	20.697	255
+102	baseline	99c/1/10r (rc=255)	12.069	255
+102	no_init_only	99c/1/9r (rc=255)	11.119	255
+102	no_admin_benign	99c/1/12r (rc=255)	11.893	255
+102	sink_none	99c/1/10r (rc=255)	10.781	255
+102	sink_samevar	99c/1/4r (rc=255)	12.608	255
+102	budget_0	99c/1/0r	10.038	0
+102	budget_inf	99c/1/10r (rc=255)	11.279	255
+103	baseline	30c/1/0r	16.982	0
+103	no_init_only	30c/1/0r	15.939	0
+103	no_admin_benign	30c/1/0r	16.987	0
+103	sink_none	30c/1/0r	16.147	0
+103	sink_samevar	30c/1/0r	16.214	0
+103	budget_0	30c/1/0r	16.667	0
+103	budget_inf	30c/1/0r	18.679	0
+104/core-contracts	baseline	42c/1/1r (rc=255)	13.515	255
+104/core-contracts	no_init_only	42c/1/1r (rc=255)	15.114	255
+104/core-contracts	no_admin_benign	42c/1/1r (rc=255)	15.003	255
+104/core-contracts	sink_none	42c/1/1r (rc=255)	12.477	255
+104/core-contracts	sink_samevar	42c/1/1r (rc=255)	16.229	255
+104/core-contracts	budget_0	42c/1/0r	13.175	0
+104/core-contracts	budget_inf	42c/1/1r (rc=255)	13.582	255
+107	baseline	100c/1/79r (rc=255)	26.315	255
+107	no_init_only	100c/1/80r (rc=255)	25.090	255
+107	no_admin_benign	100c/1/82r (rc=255)	26.260	255
+107	sink_none	100c/1/82r (rc=255)	26.503	255
+107	sink_samevar	100c/1/41r (rc=255)	21.861	255
+107	budget_0	100c/1/0r	23.805	0
+107	budget_inf	100c/1/80r (rc=255)	24.754	255
+110	baseline	73c/1/44r (rc=255)	22.769	255
+110	no_init_only	73c/1/44r (rc=255)	20.356	255
+110	no_admin_benign	73c/1/56r (rc=255)	22.459	255
+110	sink_none	73c/1/47r (rc=255)	23.114	255
+110	sink_samevar	73c/1/25r (rc=255)	22.037	255
+110	budget_0	73c/1/0r	20.164	0
+110	budget_inf	73c/1/43r (rc=255)	21.354	255
+112/backd	baseline	210c/1/47r (rc=255)	30.363	255
+112/backd	no_init_only	210c/1/45r (rc=255)	24.550	255
+112/backd	no_admin_benign	210c/1/47r (rc=255)	27.135	255
+112/backd	sink_none	210c/1/62r (rc=255)	29.814	255
+112/backd	sink_samevar	210c/1/20r (rc=255)	26.129	255
+112/backd	budget_0	210c/1/0r	23.017	0
+112/backd	budget_inf	210c/1/47r (rc=255)	26.933	255
+114/aave-v3-yield-source	baseline	36c/1/0r	17.074	0
+114/aave-v3-yield-source	no_init_only	36c/1/0r	17.042	0
+114/aave-v3-yield-source	no_admin_benign	36c/1/0r	15.711	0
+114/aave-v3-yield-source	sink_none	36c/1/0r	15.708	0
+114/aave-v3-yield-source	sink_samevar	36c/1/0r	15.934	0
+114/aave-v3-yield-source	budget_0	36c/1/0r	18.563	0
+114/aave-v3-yield-source	budget_inf	36c/1/0r	16.253	0
+115/supervaults	baseline	37c/1/0r	19.368	0
+115/supervaults	no_init_only	37c/1/0r	16.929	0
+115/supervaults	no_admin_benign	37c/1/0r	16.665	0
+115/supervaults	sink_none	37c/1/0r	15.775	0
+115/supervaults	sink_samevar	37c/1/0r	18.990	0
+115/supervaults	budget_0	37c/1/0r	17.490	0
+115/supervaults	budget_inf	37c/1/0r	16.721	0
+12	baseline	80c/1/7r (rc=255)	19.237	255
+12	no_init_only	80c/1/7r (rc=255)	21.805	255
+12	no_admin_benign	80c/1/7r (rc=255)	20.516	255
+12	sink_none	80c/1/9r (rc=255)	22.114	255
+12	sink_samevar	80c/1/3r (rc=255)	19.320	255
+12	budget_0	80c/1/0r	20.040	0
+12	budget_inf	80c/1/7r (rc=255)	19.442	255
+122/contracts	baseline	33c/1/108r (rc=255)	8.535	255
+122/contracts	no_init_only	33c/1/123r (rc=255)	8.335	255
+122/contracts	no_admin_benign	33c/1/110r (rc=255)	8.308	255
+122/contracts	sink_none	33c/1/108r (rc=255)	8.416	255
+122/contracts	sink_samevar	33c/1/91r (rc=255)	8.404	255
+122/contracts	budget_0	33c/1/0r	8.149	0
+122/contracts	budget_inf	33c/1/108r (rc=255)	8.360	255
+123	baseline	59c/1/70r (rc=255)	14.925	255
+123	no_init_only	59c/1/66r (rc=255)	15.177	255
+123	no_admin_benign	59c/1/70r (rc=255)	15.337	255
+123	sink_none	59c/1/67r (rc=255)	15.128	255
+123	sink_samevar	59c/1/27r (rc=255)	14.715	255
+123	budget_0	59c/1/0r	12.535	0
+123	budget_inf	59c/1/72r (rc=255)	16.007	255
+124/index-coop-notional-trade-module	baseline	304c/1/47r (rc=255)	74.014	255
+124/index-coop-notional-trade-module	no_init_only	304c/1/48r (rc=255)	53.378	255
+124/index-coop-notional-trade-module	no_admin_benign	304c/1/48r (rc=255)	78.543	255
+124/index-coop-notional-trade-module	sink_none	304c/1/54r (rc=255)	73.524	255
+124/index-coop-notional-trade-module	sink_samevar	304c/1/22r (rc=255)	72.025	255
+124/index-coop-notional-trade-module	budget_0	304c/1/0r	67.803	0
+124/index-coop-notional-trade-module	budget_inf	304c/1/47r (rc=255)	76.780	255
+145	baseline	104c/1/8r (rc=255)	15.433	255
+145	no_init_only	104c/1/8r (rc=255)	14.362	255
+145	no_admin_benign	104c/1/8r (rc=255)	17.192	255
+145	sink_none	104c/1/8r (rc=255)	14.524	255
+145	sink_samevar	104c/1/3r (rc=255)	16.539	255
+145	budget_0	104c/1/0r	15.756	0
+145	budget_inf	104c/1/8r (rc=255)	15.490	255
+17	baseline	77c/1/73r (rc=255)	13.608	255
+17	no_init_only	77c/1/76r (rc=255)	9.210	255
+17	no_admin_benign	77c/1/70r (rc=255)	14.023	255
+17	sink_none	77c/1/108r (rc=255)	12.910	255
+17	sink_samevar	77c/1/74r (rc=255)	13.123	255
+17	budget_0	77c/1/0r	11.520	0
+17	budget_inf	77c/1/67r (rc=255)	13.965	255
+18	baseline	29c/1/2r (rc=255)	8.128	255
+18	no_init_only	29c/1/2r (rc=255)	8.312	255
+18	no_admin_benign	29c/1/2r (rc=255)	6.158	255
+18	sink_none	29c/1/2r (rc=255)	6.689	255
+18	sink_samevar	29c/1/1r (rc=255)	6.590	255
+18	budget_0	29c/1/0r	6.592	0
+18	budget_inf	29c/1/2r (rc=255)	6.815	255
+19	baseline	13c/1/6r (rc=255)	6.337	255
+19	no_init_only	13c/1/6r (rc=255)	6.257	255
+19	no_admin_benign	13c/1/6r (rc=255)	6.104	255
+19	sink_none	13c/1/6r (rc=255)	6.094	255
+19	sink_samevar	13c/1/0r	6.462	0
+19	budget_0	13c/1/0r	6.518	0
+19	budget_inf	13c/1/6r (rc=255)	5.852	255
+192	baseline	96c/1/54r (rc=255)	16.677	255
+192	no_init_only	96c/1/54r (rc=255)	17.931	255
+192	no_admin_benign	96c/1/55r (rc=255)	18.710	255
+192	sink_none	96c/1/55r (rc=255)	17.847	255
+192	sink_samevar	96c/1/10r (rc=255)	16.881	255
+192	budget_0	96c/1/0r	14.979	0
+192	budget_inf	96c/1/54r (rc=255)	18.614	255
+20	baseline	26c/1/41r (rc=255)	10.163	255
+20	no_init_only	26c/1/41r (rc=255)	11.413	255
+20	no_admin_benign	26c/1/41r (rc=255)	12.294	255
+20	sink_none	26c/1/41r (rc=255)	10.220	255
+20	sink_samevar	26c/1/10r (rc=255)	11.832	255
+20	budget_0	26c/1/0r	9.724	0
+20	budget_inf	26c/1/41r (rc=255)	10.263	255
+21	baseline	69c/1/0r	11.598	0
+21	no_init_only	69c/1/0r	10.070	0
+21	no_admin_benign	69c/1/0r	9.645	0
+21	sink_none	69c/1/0r	10.342	0
+21	sink_samevar	69c/1/0r	12.811	0
+21	budget_0	69c/1/0r	12.413	0
+21	budget_inf	69c/1/0r	9.890	0
+22/contracts	baseline	78c/1/21r (rc=255)	16.385	255
+22/contracts	no_init_only	78c/1/21r (rc=255)	18.752	255
+22/contracts	no_admin_benign	78c/1/21r (rc=255)	17.425	255
+22/contracts	sink_none	78c/1/21r (rc=255)	18.263	255
+22/contracts	sink_samevar	78c/1/7r (rc=255)	14.089	255
+22/contracts	budget_0	78c/1/0r	14.220	0
+22/contracts	budget_inf	78c/1/21r (rc=255)	15.899	255
+24/pooltogether-mstable	baseline	8c/1/0r	14.355	0
+24/pooltogether-mstable	no_init_only	8c/1/0r	15.772	0
+24/pooltogether-mstable	no_admin_benign	8c/1/0r	14.050	0
+24/pooltogether-mstable	sink_none	8c/1/0r	17.125	0
+24/pooltogether-mstable	sink_samevar	8c/1/0r	14.386	0
+24/pooltogether-mstable	budget_0	8c/1/0r	14.890	0
+24/pooltogether-mstable	budget_inf	8c/1/0r	13.907	0
+25	baseline	76c/1/9r (rc=255)	21.511	255
+25	no_init_only	76c/1/9r (rc=255)	20.460	255
+25	no_admin_benign	76c/1/10r (rc=255)	23.070	255
+25	sink_none	76c/1/11r (rc=255)	21.947	255
+25	sink_samevar	76c/1/3r (rc=255)	21.876	255
+25	budget_0	76c/1/0r	20.735	0
+25	budget_inf	76c/1/9r (rc=255)	20.982	255
+27/cosmos-gravity-bridge/solidity	baseline	26c/1/5r (rc=255)	6.372	255
+27/cosmos-gravity-bridge/solidity	no_init_only	26c/1/5r (rc=255)	6.284	255
+27/cosmos-gravity-bridge/solidity	no_admin_benign	26c/1/5r (rc=255)	6.554	255
+27/cosmos-gravity-bridge/solidity	sink_none	26c/1/5r (rc=255)	6.537	255
+27/cosmos-gravity-bridge/solidity	sink_samevar	26c/1/0r	6.698	0
+27/cosmos-gravity-bridge/solidity	budget_0	26c/1/0r	6.605	0
+27/cosmos-gravity-bridge/solidity	budget_inf	26c/1/5r (rc=255)	7.016	255
+36/contracts	baseline	22c/1/24r (rc=255)	8.339	255
+36/contracts	no_init_only	22c/1/22r (rc=255)	7.620	255
+36/contracts	no_admin_benign	22c/1/24r (rc=255)	8.251	255
+36/contracts	sink_none	22c/1/24r (rc=255)	8.476	255
+36/contracts	sink_samevar	22c/1/7r (rc=255)	8.703	255
+36/contracts	budget_0	22c/1/0r	12.441	0
+36/contracts	budget_inf	22c/1/24r (rc=255)	9.077	255
+41/contracts	baseline	23c/1/33r (rc=255)	8.496	255
+41/contracts	no_init_only	23c/1/30r (rc=255)	7.787	255
+41/contracts	no_admin_benign	23c/1/30r (rc=255)	8.566	255
+41/contracts	sink_none	23c/1/31r (rc=255)	10.216	255
+41/contracts	sink_samevar	23c/1/7r (rc=255)	10.238	255
+41/contracts	budget_0	23c/1/0r	8.520	0
+41/contracts	budget_inf	23c/1/33r (rc=255)	9.121	255
+44	baseline	17c/1/0r	9.254	0
+44	no_init_only	17c/1/0r	9.633	0
+44	no_admin_benign	17c/1/0r	13.454	0
+44	sink_none	17c/1/0r	12.230	0
+44	sink_samevar	17c/1/0r	9.622	0
+44	budget_0	17c/1/0r	9.069	0
+44	budget_inf	17c/1/0r	9.462	0
+47	baseline	10c/1/0r	3.244	0
+47	no_init_only	10c/1/0r	3.163	0
+47	no_admin_benign	10c/1/0r	3.398	0
+47	sink_none	10c/1/1r (rc=255)	3.223	255
+47	sink_samevar	10c/1/0r	3.413	0
+47	budget_0	10c/1/0r	3.444	0
+47	budget_inf	10c/1/0r	3.263	0
+49	baseline	77c/1/19r (rc=255)	14.882	255
+49	no_init_only	77c/1/19r (rc=255)	12.030	255
+49	no_admin_benign	77c/1/19r (rc=255)	13.782	255
+49	sink_none	77c/1/19r (rc=255)	13.288	255
+49	sink_samevar	77c/1/2r (rc=255)	13.159	255
+49	budget_0	77c/1/0r	14.096	0
+49	budget_inf	77c/1/19r (rc=255)	13.597	255
+5/vader-protocol	baseline	24c/1/22r (rc=255)	8.984	255
+5/vader-protocol	no_init_only	24c/1/22r (rc=255)	8.560	255
+5/vader-protocol	no_admin_benign	24c/1/23r (rc=255)	10.830	255
+5/vader-protocol	sink_none	24c/1/23r (rc=255)	9.986	255
+5/vader-protocol	sink_samevar	24c/1/11r (rc=255)	12.984	255
+5/vader-protocol	budget_0	24c/1/0r	9.683	0
+5/vader-protocol	budget_inf	24c/1/23r (rc=255)	9.125	255
+52	baseline	110c/1/32r (rc=255)	16.569	255
+52	no_init_only	110c/1/29r (rc=255)	14.820	255
+52	no_admin_benign	110c/1/33r (rc=255)	16.032	255
+52	sink_none	110c/1/35r (rc=255)	17.210	255
+52	sink_samevar	110c/1/7r (rc=255)	14.102	255
+52	budget_0	110c/1/0r	13.452	0
+52	budget_inf	110c/1/30r (rc=255)	17.182	255
+54/smart-contracts	baseline	113c/1/4r (rc=255)	22.909	255
+54/smart-contracts	no_init_only	113c/1/4r (rc=255)	22.315	255
+54/smart-contracts	no_admin_benign	113c/1/4r (rc=255)	20.887	255
+54/smart-contracts	sink_none	113c/1/4r (rc=255)	23.493	255
+54/smart-contracts	sink_samevar	113c/1/0r	19.111	0
+54/smart-contracts	budget_0	113c/1/0r	21.449	0
+54/smart-contracts	budget_inf	113c/1/4r (rc=255)	20.392	255
+56	baseline	155c/1/108r (rc=255)	40.580	255
+56	no_init_only	155c/1/105r (rc=255)	20.487	255
+56	no_admin_benign	155c/1/108r (rc=255)	37.388	255
+56	sink_none	155c/1/138r (rc=255)	35.635	255
+56	sink_samevar	155c/1/84r (rc=255)	35.836	255
+56	budget_0	155c/1/0r	33.610	0
+56	budget_inf	155c/1/106r (rc=255)	38.737	255
+57/ibbtc	baseline	53c/1/5r (rc=255)	7.832	255
+57/ibbtc	no_init_only	53c/1/5r (rc=255)	8.317	255
+57/ibbtc	no_admin_benign	53c/1/5r (rc=255)	9.329	255
+57/ibbtc	sink_none	53c/1/5r (rc=255)	7.699	255
+57/ibbtc	sink_samevar	53c/1/4r (rc=255)	7.782	255
+57/ibbtc	budget_0	53c/1/0r	8.019	0
+57/ibbtc	budget_inf	53c/1/5r (rc=255)	8.179	255
+58/mellow-vaults	baseline	99c/1/20r (rc=255)	13.122	255
+58/mellow-vaults	no_init_only	99c/1/20r (rc=255)	11.369	255
+58/mellow-vaults	no_admin_benign	99c/1/20r (rc=255)	16.230	255
+58/mellow-vaults	sink_none	99c/1/24r (rc=255)	11.965	255
+58/mellow-vaults	sink_samevar	99c/1/10r (rc=255)	11.344	255
+58/mellow-vaults	budget_0	99c/1/0r	10.748	0
+58/mellow-vaults	budget_inf	99c/1/20r (rc=255)	12.725	255
+59/src	baseline	80c/1/57r (rc=255)	42.624	255
+59/src	no_init_only	80c/1/80r (rc=255)	18.211	255
+59/src	no_admin_benign	80c/1/70r (rc=255)	43.082	255
+59/src	sink_none	80c/1/81r (rc=255)	39.618	255
+59/src	sink_samevar	80c/1/8r (rc=255)	38.381	255
+59/src	budget_0	80c/1/0r	39.039	0
+59/src	budget_inf	80c/1/86r (rc=255)	39.851	255
+6	baseline	6c/1/12r (rc=255)	5.843	255
+6	no_init_only	6c/1/12r (rc=255)	5.575	255
+6	no_admin_benign	6c/1/11r (rc=255)	5.700	255
+6	sink_none	6c/1/12r (rc=255)	5.867	255
+6	sink_samevar	6c/1/3r (rc=255)	7.708	255
+6	budget_0	6c/1/0r	5.515	0
+6	budget_inf	6c/1/11r (rc=255)	5.768	255
+60/protocol	baseline	46c/1/4r (rc=255)	21.025	255
+60/protocol	no_init_only	46c/1/4r (rc=255)	17.352	255
+60/protocol	no_admin_benign	46c/1/4r (rc=255)	17.730	255
+60/protocol	sink_none	46c/1/4r (rc=255)	16.307	255
+60/protocol	sink_samevar	46c/1/2r (rc=255)	16.798	255
+60/protocol	budget_0	46c/1/0r	17.842	0
+60/protocol	budget_inf	46c/1/4r (rc=255)	18.391	255
+61	baseline	85c/1/48r (rc=255)	23.381	255
+61	no_init_only	85c/1/49r (rc=255)	20.236	255
+61	no_admin_benign	85c/1/49r (rc=255)	28.132	255
+61	sink_none	85c/1/54r (rc=255)	22.603	255
+61	sink_samevar	85c/1/27r (rc=255)	22.422	255
+61	budget_0	85c/1/0r	23.674	0
+61	budget_inf	85c/1/48r (rc=255)	23.752	255
+64/v4-core	baseline	77c/1/4r (rc=255)	16.916	255
+64/v4-core	no_init_only	77c/1/4r (rc=255)	18.344	255
+64/v4-core	no_admin_benign	77c/1/4r (rc=255)	15.209	255
+64/v4-core	sink_none	77c/1/5r (rc=255)	16.125	255
+64/v4-core	sink_samevar	77c/1/0r	15.802	0
+64/v4-core	budget_0	77c/1/0r	17.894	0
+64/v4-core	budget_inf	77c/1/4r (rc=255)	16.802	255
+64/v4-periphery	baseline	43c/1/1r (rc=255)	9.485	255
+64/v4-periphery	no_init_only	43c/1/1r (rc=255)	9.893	255
+64/v4-periphery	no_admin_benign	43c/1/1r (rc=255)	9.383	255
+64/v4-periphery	sink_none	43c/1/1r (rc=255)	9.588	255
+64/v4-periphery	sink_samevar	43c/1/0r	8.994	0
+64/v4-periphery	budget_0	43c/1/0r	10.572	0
+64/v4-periphery	budget_inf	43c/1/1r (rc=255)	10.788	255
+67/sandclock	baseline	41c/1/15r (rc=255)	13.147	255
+67/sandclock	no_init_only	41c/1/15r (rc=255)	13.229	255
+67/sandclock	no_admin_benign	41c/1/15r (rc=255)	13.294	255
+67/sandclock	sink_none	41c/1/15r (rc=255)	14.022	255
+67/sandclock	sink_samevar	41c/1/5r (rc=255)	12.763	255
+67/sandclock	budget_0	41c/1/0r	15.628	0
+67/sandclock	budget_inf	41c/1/15r (rc=255)	12.728	255
+69/nftx-protocol-v2	baseline	132c/1/60r (rc=255)	13.741	255
+69/nftx-protocol-v2	no_init_only	132c/1/65r (rc=255)	12.738	255
+69/nftx-protocol-v2	no_admin_benign	132c/1/60r (rc=255)	12.960	255
+69/nftx-protocol-v2	sink_none	132c/1/60r (rc=255)	12.898	255
+69/nftx-protocol-v2	sink_samevar	132c/1/35r (rc=255)	11.460	255
+69/nftx-protocol-v2	budget_0	132c/1/0r	10.835	0
+69/nftx-protocol-v2	budget_inf	132c/1/60r (rc=255)	11.880	255
+7/code	baseline	52c/1/74r (rc=255)	43.129	255
+7/code	no_init_only	52c/1/76r (rc=255)	42.357	255
+7/code	no_admin_benign	52c/1/74r (rc=255)	42.445	255
+7/code	sink_none	52c/1/88r (rc=255)	42.890	255
+7/code	sink_samevar	52c/1/19r (rc=255)	44.331	255
+7/code	budget_0	52c/1/0r	40.678	0
+7/code	budget_inf	52c/1/74r (rc=255)	43.744	255
+70	baseline	110c/1/40r (rc=255)	9.052	255
+70	no_init_only	110c/1/42r (rc=255)	7.436	255
+70	no_admin_benign	110c/1/40r (rc=255)	8.268	255
+70	sink_none	110c/1/47r (rc=255)	8.481	255
+70	sink_samevar	110c/1/17r (rc=255)	8.030	255
+70	budget_0	110c/1/0r	8.002	0
+70	budget_inf	110c/1/40r (rc=255)	8.070	255
+71	baseline	40c/1/6r (rc=255)	10.396	255
+71	no_init_only	40c/1/6r (rc=255)	10.353	255
+71	no_admin_benign	40c/1/6r (rc=255)	10.547	255
+71	sink_none	40c/1/6r (rc=255)	10.679	255
+71	sink_samevar	40c/1/0r	12.172	0
+71	budget_0	40c/1/0r	10.256	0
+71	budget_inf	40c/1/6r (rc=255)	11.892	255
+72/openleverage-contracts	baseline	74c/1/84r (rc=255)	41.931	255
+72/openleverage-contracts	no_init_only	74c/1/90r (rc=255)	22.151	255
+72/openleverage-contracts	no_admin_benign	74c/1/84r (rc=255)	38.426	255
+72/openleverage-contracts	sink_none	74c/1/88r (rc=255)	44.150	255
+72/openleverage-contracts	sink_samevar	74c/1/36r (rc=255)	42.029	255
+72/openleverage-contracts	budget_0	74c/1/0r	39.539	0
+72/openleverage-contracts	budget_inf	74c/1/84r (rc=255)	40.303	255
+73/protocol	baseline	93c/1/144r (rc=255)	28.521	255
+73/protocol	no_init_only	93c/1/138r (rc=255)	29.433	255
+73/protocol	no_admin_benign	93c/1/139r (rc=255)	27.968	255
+73/protocol	sink_none	93c/1/147r (rc=255)	30.589	255
+73/protocol	sink_samevar	93c/1/57r (rc=255)	28.351	255
+73/protocol	budget_0	93c/1/0r	25.918	0
+73/protocol	budget_inf	93c/1/149r (rc=255)	28.819	255
+75/xdefi-distribution	baseline	26c/1/1r (rc=255)	7.593	255
+75/xdefi-distribution	no_init_only	26c/1/1r (rc=255)	7.854	255
+75/xdefi-distribution	no_admin_benign	26c/1/1r (rc=255)	7.066	255
+75/xdefi-distribution	sink_none	26c/1/1r (rc=255)	7.254	255
+75/xdefi-distribution	sink_samevar	26c/1/0r	7.266	0
+75/xdefi-distribution	budget_0	26c/1/0r	8.607	0
+75/xdefi-distribution	budget_inf	26c/1/1r (rc=255)	7.198	255
+76	baseline	70c/1/2r (rc=255)	11.003	255
+76	no_init_only	70c/1/2r (rc=255)	11.056	255
+76	no_admin_benign	70c/1/2r (rc=255)	12.672	255
+76	sink_none	70c/1/4r (rc=255)	15.221	255
+76	sink_samevar	70c/1/2r (rc=255)	13.676	255
+76	budget_0	70c/1/0r	11.399	0
+76	budget_inf	70c/1/2r (rc=255)	11.324	255
+77/elasticswap	baseline	16c/1/1r (rc=255)	7.729	255
+77/elasticswap	no_init_only	16c/1/1r (rc=255)	7.838	255
+77/elasticswap	no_admin_benign	16c/1/1r (rc=255)	9.280	255
+77/elasticswap	sink_none	16c/1/1r (rc=255)	7.480	255
+77/elasticswap	sink_samevar	16c/1/0r	9.579	0
+77/elasticswap	budget_0	16c/1/0r	9.404	0
+77/elasticswap	budget_inf	16c/1/1r (rc=255)	8.242	255
+78	baseline	128c/1/104r (rc=255)	26.513	255
+78	no_init_only	128c/1/104r (rc=255)	25.263	255
+78	no_admin_benign	128c/1/104r (rc=255)	23.808	255
+78	sink_none	128c/1/109r (rc=255)	24.523	255
+78	sink_samevar	128c/1/16r (rc=255)	20.710	255
+78	budget_0	128c/1/0r	18.266	0
+78	budget_inf	128c/1/107r (rc=255)	24.178	255
+79	baseline	26c/1/39r (rc=255)	9.682	255
+79	no_init_only	26c/1/39r (rc=255)	8.008	255
+79	no_admin_benign	26c/1/39r (rc=255)	7.915	255
+79	sink_none	26c/1/39r (rc=255)	7.956	255
+79	sink_samevar	26c/1/8r (rc=255)	8.054	255
+79	budget_0	26c/1/0r	7.863	0
+79	budget_inf	26c/1/39r (rc=255)	8.563	255
+8/nftx-protocol-v2	baseline	76c/1/37r (rc=255)	13.184	255
+8/nftx-protocol-v2	no_init_only	76c/1/45r (rc=255)	11.456	255
+8/nftx-protocol-v2	no_admin_benign	76c/1/45r (rc=255)	11.334	255
+8/nftx-protocol-v2	sink_none	76c/1/37r (rc=255)	12.000	255
+8/nftx-protocol-v2	sink_samevar	76c/1/10r (rc=255)	13.000	255
+8/nftx-protocol-v2	budget_0	76c/1/0r	12.010	0
+8/nftx-protocol-v2	budget_inf	76c/1/37r (rc=255)	11.989	255
+83	baseline	27c/1/34r (rc=255)	13.143	255
+83	no_init_only	27c/1/34r (rc=255)	13.305	255
+83	no_admin_benign	27c/1/34r (rc=255)	17.878	255
+83	sink_none	27c/1/38r (rc=255)	13.317	255
+83	sink_samevar	27c/1/9r (rc=255)	13.077	255
+83	budget_0	27c/1/0r	13.740	0
+83	budget_inf	27c/1/33r (rc=255)	12.844	255
+89	baseline	84c/1/21r (rc=255)	9.297	255
+89	no_init_only	84c/1/23r (rc=255)	9.118	255
+89	no_admin_benign	84c/1/23r (rc=255)	9.119	255
+89	sink_none	84c/1/23r (rc=255)	9.888	255
+89	sink_samevar	84c/1/0r	8.257	0
+89	budget_0	84c/1/0r	9.568	0
+89	budget_inf	84c/1/21r (rc=255)	9.417	255
+94	baseline	54c/1/13r (rc=255)	14.929	255
+94	no_init_only	54c/1/13r (rc=255)	16.249	255
+94	no_admin_benign	54c/1/13r (rc=255)	15.785	255
+94	sink_none	54c/1/13r (rc=255)	17.029	255
+94	sink_samevar	54c/1/0r	15.827	0
+94	budget_0	54c/1/0r	14.876	0
+94	budget_inf	54c/1/13r (rc=255)	17.688	255
+97	baseline	101c/1/15r (rc=255)	21.385	255
+97	no_init_only	101c/1/15r (rc=255)	22.216	255
+97	no_admin_benign	101c/1/15r (rc=255)	27.782	255
+97	sink_none	101c/1/15r (rc=255)	26.911	255
+97	sink_samevar	101c/1/1r (rc=255)	26.767	255
+97	budget_0	101c/1/0r	24.044	0
+97	budget_inf	101c/1/17r (rc=255)	25.087	255
+98/quant-protocol	baseline	86c/1/10r (rc=255)	13.853	255
+98/quant-protocol	no_init_only	86c/1/10r (rc=255)	11.998	255
+98/quant-protocol	no_admin_benign	86c/1/10r (rc=255)	11.759	255
+98/quant-protocol	sink_none	86c/1/10r (rc=255)	10.224	255
+98/quant-protocol	sink_samevar	86c/1/0r	10.172	0
+98/quant-protocol	budget_0	86c/1/0r	9.667	0
+98/quant-protocol	budget_inf	86c/1/10r (rc=255)	9.931	255
+24/swappable-yield-source	baseline	17c/1/0r	6.867	0
+24/swappable-yield-source	no_init_only	17c/1/0r	6.856	0
+24/swappable-yield-source	no_admin_benign	17c/1/0r	8.726	0
+24/swappable-yield-source	sink_none	17c/1/0r	6.928	0
+24/swappable-yield-source	sink_samevar	17c/1/0r	7.000	0
+24/swappable-yield-source	budget_0	17c/1/0r	6.969	0
+24/swappable-yield-source	budget_inf	17c/1/0r	6.922	0

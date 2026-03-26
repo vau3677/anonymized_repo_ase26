@@ -6,8 +6,18 @@ This document describes scripts in this repository: what they do, how they work 
 
 ## Table of Contents
 
+**Important files:**
+
+- `dataset/results.tsv`: this TSV holds all ablation results for replication
+
+**Important scripts:**
+
 - [dataset/main.py](#datasetmainpy)
 - [inconsistent_state (our Slither detector)](#inconsistent_state-slither-detector)
+- [dataset/info.py](#datasetinfopy)
+- [dataset/fails.py](#datasetfailspy)
+- [dataset/tools/remove_failed_detections.py](#datasettoolsremovefaileddetectionspy)
+- [dataset/tests_left.py](#datasettestsleftpy)
 
 ---
 
@@ -185,3 +195,157 @@ Variable metadata includes:
 - `base_slot` and `key`: for mapping-slot variables
 - `members`: for multi-variable groups
 - `branch_groups`: when a variable participates in branch-group structure
+
+---
+
+## dataset/info.py
+
+**Purpose:** Computes contract/file statistics for each repo in the dataset.
+
+**How it works:**
+
+1. Enumerates each repo from `out/` and matches them against repo directories under the contracts root.
+3. Scans each repo recursively for `.sol` and `.vy` source files.
+4. For each file, we count non-empty LOC, record file size in bytes, and extract the first `pragma solidity ...;` line.
+5. We then aggregate an exhaustive list of statistics from each repo:
+   - contract/file count
+   - total non-empty LOC
+   - average LOC per file
+   - median LOC per file
+   - largest file size
+   - total repos
+   - total contracts/files
+   - total non-empty LOC
+   - mean / median / P90 contracts per repo
+   - mean / median / P90 LOC per file
+   - heaviest repo by file count
+   - heaviest repo by LOC
+   - largest single file
+   - cross-repo duplicate filenames
+   - Solidity pragma histogram
+
+**Usage:**
+
+Basic usage and formatting options are CSV or TSV:
+
+``` bash
+python3 repo_ascii_table.py --out ./out --contracts ./Web3Bugs/contracts # --tsv
+```
+
+**Arguments:**
+- `--out`: path to the `out/` directory containing numeric repo IDs (default: `out`)
+- `--contracts`: path to the dataset contracts root (default: `web3bugs/contracts`)
+- `--extensions`: repeatable source extension filter (default: `.sol`, `.vy`)
+- `--tsv`: prints per-repo stats as TSV instead of the formatted ASCII table
+
+**Inputs:**
+- An `out/` directory whose immediate numeric children correspond to repo IDs.
+- A contracts root containing all repos.
+- Source files with the configured extensions is optional.
+
+**Outputs:**
+- (stdout) A table of per-repo statistics.
+- (stdout) Dataset statistics.
+
+**Important notes:**
+- Repo IDs present in `--out` but missing under `--contracts` are skipped and reported.
+- LOC is counted as non-empty lines only.
+
+---
+
+## dataset/fails.py
+
+**Purpose:** Scans `out/` for failed detector runs and reports incompletions.
+
+**How it works:**
+
+1. Walks `out/` and loads all `meta.json` files.
+2. Marks a run as failed if any of the following hold:
+   - `meta.json` is missing or invalid
+   - `ok=false`
+   - `rc != 0`
+   - `status_line` begins with `ERR`
+   - `findings.json` is missing
+3. Records label, ablation ID, run name, return code, status, run directory, and failure reasons.
+4. Also checks for run directories that should contain `meta.json` but don't, and reports them.
+
+**Usage:**
+
+Show all runs and optionally emit `json`:
+
+```bash
+python3 dataset/fails.py --all
+python3 dataset/fails.py --json
+```
+
+**Arguments:**
+- `--out-dir`: path to the `out/` directory (default: `out`)
+- `--all`: include successful and unknown runs, not just failures
+- `--json`: emit JSON instead of TSV-style text
+
+**Inputs:**
+- `out/<label>/<ablation>/meta.json`
+- `out/<label>/<ablation>/findings.json` presence check
+
+**Outputs:**
+- (stdout) Failed runs, or all runs with `--all`
+- (stderr) Final summary in the form `[SUMMARY] scanned=<n> runs, failures=<m>`
+
+**Important notes:**
+- Use this script to identify which ablations need reruns/debugging.
+
+---
+
+## dataset/tools/remove_failed_detections.py
+
+**Purpose:** Filters `out/done.tsv` to only lines whose ablation/run field indicates they completed a run successfully.
+
+**How it works:**
+
+1. Resolves `out/done.tsv` relative to the script location.
+2. Compiles a regex for the expected valid token shape of `\b\d+c/1/\d+r\b`.
+3. Reads every line from `done.tsv` and only keeps lines matching. Overwrites `done.tsv` with the filtered result and prints how many invalid lines were removed and how many valid lines were kept.
+
+**Usage:**
+
+```bash
+python3 dataset/tools/remove_failed_detections.py
+```
+
+**Inputs:**
+- `out/done.tsv`
+
+**Outputs:**
+- Overwrites `out/done.tsv` with filtered contents.
+- (stdout) Summary of removed and kept lines.
+
+**Important notes:**
+- This is a cleanup utility for `out/done.tsv` that removes malformed/failed entries.
+- The filtering rule is regex-based so make sure your directories/files match before running.
+
+---
+
+## dataset/tests_left.py
+
+**Purpose:** Reports which repos still exist under `Web3Bugs/contracts` but haven't been run under the ablation study.
+
+**How it works:**
+
+1. Collects all immediate numeric directory names under `Web3Bugs/contracts` and `out/`.
+2. Computes a set difference between the contract folders present in the dataset minus folders already present in `out/`. Prints total contract folders, out folders, and missing folders.
+
+**Usage:**
+
+```bash
+python3 dataset/tests_left.py
+```
+
+**Inputs:**
+- `Web3Bugs/contracts`
+- `out`
+
+**Outputs:**
+- (stdout) Counts and list of numeric repos missing from `out/`.
+
+**Important notes:**
+- It does not verify whether all ablations were completed, only those which have not yet been scanned.
