@@ -24,8 +24,7 @@ Slither is a Solidity & Vyper static analysis framework written in Python3. It r
 From source (Slither, Hardhat v2):
 
 ```bash
-git clone <this repo>
-cd <this repo>/slither-si-detector
+cd slither-si-detector
 pip install -e .
 npx hardhat clean && npx hardhat compile
 ISD_JSON_OUT=out.json slither smart-contract/repo --detect inconsistent_state --hardhat-ignore-compile

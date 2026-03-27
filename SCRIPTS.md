@@ -368,9 +368,9 @@ python3 dataset/tests_left.py
 
 ```bash
 python3 evaluation/master.py \
-  --xlsx path/to/MV-Bench.xlsx \
-  --results "path/to/results.tsv" \
-  --ablation-map "/path/to/ablation_map.tsv" \
+  --xlsx MV-Bench.xlsx \
+  --results "dataset/results.tsv" \
+  --ablation-map "dataset/out/ablation_map.tsv" \
   --out "evaluation/validation/"
 ```
 
