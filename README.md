@@ -30,12 +30,6 @@ npx hardhat clean && npx hardhat compile
 ISD_JSON_OUT=out.json slither smart-contract/repo --detect inconsistent_state --hardhat-ignore-compile
 ```
 
-Using Docker (recommended for experiment automation):
-
-```
-cd <contract_example>
-```
-
 <!-- ### Example: Hardhat v2
 
 ```
