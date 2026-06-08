@@ -3,7 +3,6 @@ import '@nomiclabs/hardhat-waffle';
 import 'solidity-coverage';
 import 'hardhat-spdx-license-identifier';
 import 'hardhat-log-remover';
-/*
 import '@nomiclabs/hardhat-etherscan';
 import 'dotenv/config';
 import { task } from "hardhat/config";
@@ -66,19 +65,6 @@ export default {
             enabled: true,
             runs: 200,
           },
-          outputSelection: {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "metadata",
-                "storageLayout"
-              ],
-              "": ["ast"]
-            }
-          },
-
           metadata: {
             bytecodeHash: 'none',
           },
@@ -91,35 +77,3 @@ export default {
     timeout: 2000000,
   },
 };
-*/
-
-import { HardhatUserConfig } from 'hardhat/config';
-
-const config: HardhatUserConfig = {
-  solidity: {
-    compilers: [
-      {
-        version: '0.8.11',
-        settings: {
-          optimizer: { enabled: true, runs: 200 },
-          outputSelection: {
-            '*': {
-              '*': [
-                'abi',
-                'evm.bytecode',
-                'evm.deployedBytecode',
-                'metadata',
-                'storageLayout',
-              ],
-              '': ['ast'],
-            },
-          },
-          metadata: { bytecodeHash: 'none' },
-        },
-      },
-    ],
-  },
-  // No networks block: Hardhat uses its built-in in-memory network by default
-};
-
-export default config;

@@ -17,19 +17,6 @@ task("accounts", "Prints the list of accounts", async () => {
           optimizer: {
             enabled: true
           }
-        ,
-          outputSelection: {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "metadata",
-                "storageLayout"
-              ],
-              "": ["ast"]
-            }
-          },
-}
+        }
       }
 }

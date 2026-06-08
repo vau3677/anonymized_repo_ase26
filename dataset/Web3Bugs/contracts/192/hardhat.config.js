@@ -35,19 +35,7 @@ module.exports = {
           optimizer: {
               enabled: true,
               runs: 1000000
-          },
-          outputSelection: {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "metadata",
-                "storageLayout"
-              ],
-              "": ["ast"]
-            }
-          },
+          }
         }
       }
     ],
@@ -58,19 +46,7 @@ module.exports = {
           optimizer: {
             enabled: true,
             runs: 10
-          },
-          outputSelection: {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "metadata",
-                "storageLayout"
-              ],
-              "": ["ast"]
-            }
-          },
+          }
         }
       },
     }

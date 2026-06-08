@@ -1,10 +1,7 @@
 {
   "name": "mellow-contracts-v2",
   "version": "1.0.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mellow-finance/mellow-contracts-v2.git"
-  },
+  "repository": "https://github.com/mellow-finance/mellow-contracts-v2",
   "license": "MIT",
   "scripts": {
     "c": "hardhat compile",
@@ -19,8 +16,8 @@
     "test": "hardhat test --config hardhat.test.config.ts",
     "coverage": "rm -rf artifacts && rm -rf test/types && hardhat compile --config hardhat.test.config.ts && hardhat coverage --config hardhat.test.config.ts",
     "size": "rm -rf artifacts && hardhat compile && hardhat size-contracts",
-    "prettier": "prettier -w contracts/**/*.sol test/*.test.ts test/library/*.ts",
-    "prettier:check": "prettier -c contracts/**/*.sol test/*.test.ts test/library/*.ts",
+    "prettier": "./node_modules/.bin/prettier -w contracts/**/*.sol test/*.test.ts test/library/*.ts",
+    "prettier:check": "./node_modules/.bin/prettier -c contracts/**/*.sol test/*.test.ts test/library/*.ts",
     "clean": "rm -rf artifacts && rm -rf test/types"
   },
   "devDependencies": {
@@ -49,7 +46,7 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "4.4.0",
+    "@openzeppelin/contracts": "^4.4.0",
     "@openzeppelin3/contracts": "npm:@openzeppelin/contracts@3.4.1-solc-0.7-2",
     "@types/dotenv": "^8.2.0",
     "@uniswap/v3-core": "^1.0.0",
@@ -57,16 +54,5 @@
     "dotenv": "^10.0.0",
     "solc": "0.8.9",
     "solidity-docgen": "^0.5.16"
-  },
-  "description": "![](images/bg.png)",
-  "main": ".solcover.js",
-  "directories": {
-    "test": "test"
-  },
-  "keywords": [],
-  "author": "",
-  "bugs": {
-    "url": "https://github.com/mellow-finance/mellow-contracts-v2/issues"
-  },
-  "homepage": "https://github.com/mellow-finance/mellow-contracts-v2#readme"
+  }
 }

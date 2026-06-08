@@ -10,7 +10,7 @@ import './interfaces/IERC721.sol';
 import './interfaces/ILPTokenMaster.sol';
 import './interfaces/ILendingPair.sol';
 import './interfaces/ILendingController.sol';
-import './interfaces/uniV3/IUniswapV3Helper.sol';
+import './interfaces/univ3/IUniswapV3Helper.sol';
 import './interfaces/IInterestRateModel.sol';
 
 import './external/Math.sol';

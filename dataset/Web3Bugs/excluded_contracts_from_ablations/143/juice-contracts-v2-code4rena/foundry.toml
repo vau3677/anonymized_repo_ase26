@@ -35,9 +35,3 @@ block_coinbase = '0x0000000000000000000000000000000000000000'
 block_timestamp = 1643802347
 block_difficulty = 0
 
-
-[profile.default]
-
-# Ensure storage layout for static analysis
-extra_output = ["storageLayout"]
-build_info = true

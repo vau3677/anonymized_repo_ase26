@@ -107,19 +107,6 @@ const config: HardhatUserConfig = {
           optimizer: {
             enabled: true,
           },
-          outputSelection: {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "metadata",
-                "storageLayout"
-              ],
-              "": ["ast"]
-            }
-          },
-
         },
       },
     ],

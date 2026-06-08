@@ -9,9 +9,3 @@ remappings = [
 ]
 
 # See more config options https://github.com/gakonst/foundry/tree/master/config
-[profile.default]
-
-# Ensure storage layout for static analysis
-extra_output = ["storageLayout"]
-build_info = true
-auto_detect_solc = true

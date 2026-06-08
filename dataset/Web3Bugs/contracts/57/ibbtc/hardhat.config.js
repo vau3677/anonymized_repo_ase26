@@ -32,22 +32,6 @@ module.exports = {
     },
     solidity: {
         version: '0.6.11',
-        settings: {
-          outputSelection: {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "metadata",
-                "storageLayout"
-              ],
-              "": ["ast"]
-            }
-          },
-          optimizer: { enabled: true, runs: 200 },
-        },
-
     },
     mocha: {
         timeout: 0

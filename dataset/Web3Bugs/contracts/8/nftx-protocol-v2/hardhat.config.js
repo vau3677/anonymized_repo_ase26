@@ -27,20 +27,7 @@ module.exports = {
         enabled: true,
         runs: 1000
       },
-          outputSelection: {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "metadata",
-                "storageLayout"
-              ],
-              "": ["ast"]
-            }
-          },
-
-      // evmVersion: "berlin",
+      evmVersion: "berlin",
     }
   },
   vyper: {

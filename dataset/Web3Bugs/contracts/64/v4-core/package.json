@@ -52,7 +52,7 @@
     "debug": "4.3.1",
     "ethereum-waffle": "3.4.0",
     "ethers": "5.4.6",
-    "hardhat": "^2.6.2",
+    "hardhat": "2.6.2",
     "hardhat-abi-exporter": "2.1.2",
     "hardhat-dependency-compiler": "1.1.1",
     "hardhat-deploy": "0.7.0-beta.47",
@@ -76,6 +76,5 @@
     "abis/**",
     "artifacts/**",
     "contracts/**"
-  ],
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  ]
 }

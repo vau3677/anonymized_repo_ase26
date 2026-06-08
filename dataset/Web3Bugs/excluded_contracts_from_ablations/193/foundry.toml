@@ -17,8 +17,3 @@ runs = 256
 [profile.ci]
 ffi = false
 no_match_test = "MerkleProof"
-
-# Ensure storage layout for static analysis
-extra_output = ["storageLayout"]
-build_info = true
-auto_detect_solc = true

@@ -5,18 +5,10 @@ import "@typechain/hardhat";
 import "hardhat-contract-sizer";
 import "@nomiclabs/hardhat-etherscan";
 import "solidity-coverage";
-import "hardhat-gas-reporter";
+import "hardhat-gas-reporter"
 
 require("dotenv").config();
 
-// helper to apply storage layout everywhere
-const storageLayoutSettings = {
-  outputSelection: {
-    "*": {
-      "*": ["storageLayout", "evm.bytecode", "abi"]
-    }
-  }
-};
 
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
@@ -25,53 +17,65 @@ const config: HardhatUserConfig = {
       {
         version: "0.8.4",
         settings: {
-          optimizer: { enabled: true, runs: 200 },
-          ...storageLayoutSettings
+          optimizer: {
+            enabled: true,
+            runs: 200
+          },
         }
       }
     ],
     overrides: {
-      "contracts/test/PaladinToken.sol": {
+      'contracts/test/PaladinToken.sol': {
         version: "0.8.4",
         settings: {
-          optimizer: { enabled: true, runs: 999999 },
-          ...storageLayoutSettings
+          optimizer: {
+            enabled: true,
+            runs: 999999 //keeping that score since it's the one used for live version
+          },
         }
       },
-      "contracts/HolyPaladinToken.sol": {
+      'contracts/HolyPaladinToken.sol': {
         version: "0.8.10",
         settings: {
-          optimizer: { enabled: true, runs: 200 },
-          ...storageLayoutSettings
+          optimizer: {
+            enabled: true,
+            runs: 200
+          },
         }
-      }
+      },
     }
   },
   contractSizer: {
     alphaSort: true,
     runOnCompile: true,
-    disambiguatePaths: false
+    disambiguatePaths: false,
   },
   networks: {
     hardhat: {
       forking: {
-        url:
-          "https://eth-mainnet.alchemyapi.io/v2/" +
-          (process.env.ALCHEMY_API_KEY || ""),
+        url: "https://eth-mainnet.alchemyapi.io/v2/" + (process.env.ALCHEMY_API_KEY || ''),
         blockNumber: 13178506
       }
     },
     kovan: {
       url: process.env.KOVAN_URI,
-      accounts: [process.env.KOVAN_PRIVATE_KEY || ""]
+      accounts: [process.env.KOVAN_PRIVATE_KEY || ''],
+      /*accounts: {
+        mnemonic: process.env.KOVAN_MNEMONIC,
+      },*/
     },
     mainnet: {
       url: process.env.MAINNET_URI,
-      accounts: [process.env.MAINNET_PRIVATE_KEY || ""]
-    }
+      accounts: [process.env.MAINNET_PRIVATE_KEY || ''],
+      /*accounts: {
+        mnemonic: process.env.MAINNET_MNEMONIC,
+      },*/
+    },
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY || ""
+    // Your API key for Etherscan
+    // Obtain one at https://etherscan.io/
+    apiKey: process.env.ETHERSCAN_API_KEY || ''
   },
   typechain: {
     outDir: "typechain",
@@ -83,4 +87,3 @@ const config: HardhatUserConfig = {
 };
 
 export default config;
-

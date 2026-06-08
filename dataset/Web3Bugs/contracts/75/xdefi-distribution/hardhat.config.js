@@ -1,29 +1,16 @@
 require("@nomiclabs/hardhat-waffle");
 require("hardhat-gas-reporter");
 require('solidity-coverage');
-//const secrets = require('./.secrets.json');
+const secrets = require('./.secrets.json');
 
 module.exports = {
     solidity: {
         version: "0.8.10",
         settings: {
-          outputSelection: {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "metadata",
-                "storageLayout"
-              ],
-              "": ["ast"]
-            }
-          },
-
             optimizer: {
                 enabled: true,
                 runs: 200,
-                /*details: {
+                details: {
                     peephole: true,
                     inliner: true,
                     jumpdestRemover: true,
@@ -35,14 +22,13 @@ module.exports = {
                     yulDetails: {
                         stackAllocation: true
                     }
-                } */
+                }
             },
             metadata: {
                 bytecodeHash: "none"
             },
         }
     },
-    /*
     defaultNetwork: "hardhat",
     networks: {
         hardhat: {},
@@ -64,5 +50,5 @@ module.exports = {
                 count: 1,
             },
         }
-    },*/
+    },
 };

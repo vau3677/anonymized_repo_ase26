@@ -52,3 +52,6 @@ broadcast/
 tmp/
 temp/
 *.tmp
+
+# ICSE oracle external seed data
+external/

@@ -1,0 +1,22 @@
+source_pool,web3bugs_id,contest_slug,mvbench_sheet,oracle_rows_total,mvsi_denominator,strict_b0_matches,strict_b0_false_negatives,strict_recall,strict_recall_decimal,strict_recall_pct,notes
+TOSEM-overlap,10,2021-05-visorfinance,10contracts,2,0,0,0,NA,NA,NA,Per-contest TOSEM overlap breakdown; semantic labels adjudicated independently of MV-Bench output.
+TOSEM-overlap,18,2021-07-wildcredit,18,1,1,0,1,0/1,0.000,0.0%,Per-contest TOSEM overlap breakdown; semantic labels adjudicated independently of MV-Bench output.
+TOSEM-overlap,24,2021-07-pooltogether,24swappable-yield-source;24pooltogether-mstable,1,1,0,1,0/1,0.000,0.0%,Per-contest TOSEM overlap breakdown; semantic labels adjudicated independently of MV-Bench output.
+TOSEM-overlap,25,2021-08-yield,25,1,0,0,0,NA,NA,NA,Per-contest TOSEM overlap breakdown; semantic labels adjudicated independently of MV-Bench output.
+TOSEM-overlap,36,2021-09-defiprotocol,36contracts,1,1,0,1,0/1,0.000,0.0%,Per-contest TOSEM overlap breakdown; semantic labels adjudicated independently of MV-Bench output.
+TOSEM-overlap,54,2021-11-unlock,54smart-contracts,2,0,0,0,NA,NA,NA,Per-contest TOSEM overlap breakdown; semantic labels adjudicated independently of MV-Bench output.
+TOSEM-overlap,58,2021-12-mellow,58mellow-vaults,1,1,0,1,0/1,0.000,0.0%,Per-contest TOSEM overlap breakdown; semantic labels adjudicated independently of MV-Bench output.
+TOSEM-overlap,70,2021-12-vader,70,1,0,0,0,NA,NA,NA,Per-contest TOSEM overlap breakdown; semantic labels adjudicated independently of MV-Bench output.
+TOSEM-overlap,78,2022-01-behodler,78,1,1,1,0,1/1,1.000,100.0%,Per-contest TOSEM overlap breakdown; semantic labels adjudicated independently of MV-Bench output.
+TOSEM-overlap,83,2022-02-concur,83,1,1,0,1,0/1,0.000,0.0%,Per-contest TOSEM overlap breakdown; semantic labels adjudicated independently of MV-Bench output.
+TOSEM-overlap,112,2022-04-backd,112backd,1,1,0,1,0/1,0.000,0.0%,Per-contest TOSEM overlap breakdown; semantic labels adjudicated independently of MV-Bench output.
+TOSEM-overlap,145,2022-07-ens,145,1,1,0,1,0/1,0.000,0.0%,Per-contest TOSEM overlap breakdown; semantic labels adjudicated independently of MV-Bench output.
+TOSEM-overlap,192,2022-12-tigris,192,1,1,0,1,0/1,0.000,0.0%,Per-contest TOSEM overlap breakdown; semantic labels adjudicated independently of MV-Bench output.
+Web3Bugs-Code4rena-complement,59,2021-11-malt,59src,35,8,0,8,0/8,0.000,0.0%,"Per-repository Web3Bugs/Code4rena complement breakdown; source-of-truth labels come from known findings, not MV-Bench."
+Web3Bugs-Code4rena-complement,104,2022-03-joyn,104core-contracts,21,2,0,2,0/2,0.000,0.0%,"Per-repository Web3Bugs/Code4rena complement breakdown; source-of-truth labels come from known findings, not MV-Bench."
+Web3Bugs-Code4rena-complement,60,2021-12-perennial,60protocol,5,1,0,1,0/1,0.000,0.0%,"Per-repository Web3Bugs/Code4rena complement breakdown; source-of-truth labels come from known findings, not MV-Bench."
+Web3Bugs-Code4rena-complement,72,2022-01-openleverage,72openleverage-contracts,6,1,1,0,1/1,1.000,100.0%,"Per-repository Web3Bugs/Code4rena complement breakdown; source-of-truth labels come from known findings, not MV-Bench."
+Web3Bugs-Code4rena-complement,123,2022-05-aura,123,23,7,1,6,1/7,0.143,14.3%,"Per-repository Web3Bugs/Code4rena complement breakdown; source-of-truth labels come from known findings, not MV-Bench."
+Web3Bugs-Code4rena-complement,41,2021-10-defiprotocol,41contracts,9,3,3,0,3/3,1.000,100.0%,"Per-repository Web3Bugs/Code4rena complement breakdown; source-of-truth labels come from known findings, not MV-Bench."
+Web3Bugs-Code4rena-complement subtotal,,all complement repos,multiple,99,22,5,17,5/22,0.227,22.7%,Subtotal for all manually audited Web3Bugs/Code4rena complement repositories.
+Combined independent oracle,,TOSEM overlap + Web3Bugs/Code4rena complement,multiple,114,31,6,25,6/31,0.194,19.4%,Paper-facing strict known-MVSI recall denominator. This is the headline row.

@@ -6,10 +6,3 @@ optimizer = true
 
 [ci]
 fuzz-runs = 1000
-
-[profile.default]
-
-# Ensure storage layout for static analysis
-extra_output = ["storageLayout"]
-build_info = true
-auto_detect_solc = true

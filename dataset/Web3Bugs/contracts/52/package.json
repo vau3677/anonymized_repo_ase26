@@ -25,8 +25,5 @@
         "@openzeppelin/contracts": "^4.3.2",
         "@openzeppelin/test-helpers": "^0.5.6",
         "solidity-coverage": "^0.7.17"
-    },
-    "devDependencies": {
-        "hardhat": "^2.22.17"
     }
 }

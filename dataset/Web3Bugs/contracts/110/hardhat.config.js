@@ -59,9 +59,6 @@ module.exports = {
         enabled: true,
         runs: 200,
       },
-      outputSelection: {
-        "*": { "*": ["abi", "metadata", "evm.bytecode", "evm.deployedBytecode", "storageLayout"] }
-      }
     },
   },
   paths: {

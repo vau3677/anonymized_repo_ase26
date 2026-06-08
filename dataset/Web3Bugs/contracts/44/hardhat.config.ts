@@ -10,22 +10,6 @@ const config = {
     compilers: [
       {
         version: "0.8.0",
-        settings: {
-          outputSelection: {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "metadata",
-                "storageLayout"
-              ],
-              "": ["ast"]
-            }
-          },
-          optimizer: { enabled: true, runs: 200 },
-        },
-
       },
       {
         version: "0.6.11",

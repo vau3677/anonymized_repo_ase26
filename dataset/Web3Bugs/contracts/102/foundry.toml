@@ -9,9 +9,3 @@ fuzz_runs = 50000
 
 [ci]
 verbosity = 3
-[profile.default]
-
-# Ensure storage layout for static analysis
-extra_output = ["storageLayout"]
-build_info = true
-auto_detect_solc = true

@@ -33,19 +33,6 @@ const compilerSettings = {
         enabled: true,
         runs: 800,
     },
-          outputSelection: {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "metadata",
-                "storageLayout"
-              ],
-              "": ["ast"]
-            }
-          },
-
 };
 
 const config: HardhatUserConfig = {

@@ -40,20 +40,7 @@ const config: HardhatUserConfig = {
             enabled: true,
             runs: 1
           }
-        ,
-          outputSelection: {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "metadata",
-                "storageLayout"
-              ],
-              "": ["ast"]
-            }
-          },
-}
+        }
       },    
     ]
   },

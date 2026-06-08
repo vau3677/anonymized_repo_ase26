@@ -1,13 +1,21 @@
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "strict": true,
-    "skipLibCheck": true
-  },
-  "include": ["hardhat.config.ts", "scripts", "test", "contracts"]
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "strict": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+    },
+    "include": [
+        "hardhat.config.ts",
+        "hardhat.network.ts",
+        "./deploy",
+        "./node_modules/@pooltogether/aave-yield-source/types/",
+        "./scripts",
+        "./test",
+        "types/**/*",
+        "Constant.ts"
+    ]
 }
-

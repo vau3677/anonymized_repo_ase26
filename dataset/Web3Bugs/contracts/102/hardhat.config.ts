@@ -89,10 +89,7 @@ export default {
           optimizer: {
             enabled: true,
             runs: 200
-          },
-          outputSelection: {
-            "*": { "*": ["abi","evm.bytecode","evm.deployedBytecode","metadata","devdoc","userdoc","storageLayout"], "": ["ast"] }
-          },
+          }
         }
       },
       {
@@ -101,10 +98,7 @@ export default {
           optimizer: {
             enabled: true,
             runs: 200
-          },
-          outputSelection: {
-            "*": { "*": ["abi","evm.bytecode","evm.deployedBytecode","metadata","devdoc","userdoc","storageLayout"], "": ["ast"] }
-          },
+          }
         }
       }
     ]

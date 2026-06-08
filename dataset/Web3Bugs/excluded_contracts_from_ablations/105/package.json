@@ -15,7 +15,6 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@nomicfoundation/hardhat-foundry": "^1.2.0",
     "@nomiclabs/buidler": "^1.4.8",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-etherscan": "^2.1.4",
