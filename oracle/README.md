@@ -3,7 +3,7 @@
 This folder contains the independent known-bug oracle used for strict MVSI recall. Our oracle starts from known bugs, it labels each bug under the MV-SI taxonomy, and checks whether MV-Scan's B0 ablation produced a strict match to the confirmed finding. The oracle combines two source pools under one [schema](SCHEMA.md):
 
 1. **TOSEM seed overlap.** We study their labeled repositories which overlap with MV-Bench's evaluated corpus. TOSEM had already provided root-cause, exploitation method, and fix-strategy machinery for many SI findings, so we used it directly when investigating recall.
-2. **Web3Bugs/Code4rena.** Naturally, the TOSEM overlap was not large enough to conclusively determine recall. We then investigated additional High/Medium Code4rena findings from a random subset of evaluated Web3Bugs repositories until we hit our goal of 30 MV-SI labels. Web3Bugs/Code4rena required hand-labeling into the same MV-SI, SV-SI, ISU-other, and other-logical-bug fields in order to match the same level of rigor as TOSEM.
+2. **Web3Bugs/Code4rena complement.** Because the TOSEM seed-overlap pass produced fewer than 30 MV-SI cases, we added a repository-level complement from evaluated Web3Bugs repositories with complete Code4rena reports and corresponding MV-Bench sheets.
 
 ## Current Status
 

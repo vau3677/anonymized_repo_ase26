@@ -26,9 +26,9 @@ The TOSEM overlap review queue is the canonical source for the reviewed TOSEM se
 
 ## Web3Bugs/Code4rena Complement
 
-Because TOSEM seed pool overlap produced fewer than 30 MV-SI candidates, we complemented it with Web3Bugs known findings from our evaluated repos. We randomly select repos from our evaluated corpus and audit their corresponding Code4rena report for the same data as is present in TOSEM.
+Because the TOSEM seed-overlap pass produced fewer than 30 MV-SI cases, we added a repository-level complement from evaluated Web3Bugs repositories with complete Code4rena reports and corresponding MV-Bench sheets. For each selected repository, we reviewed all High/Medium findings under the same semantic schema used for the TOSEM overlap. Selection and labeling were performed before computing the final strict B0 recall headline, and no individual finding was included or excluded based on whether B0 matched it.
 
-Randomly chosen repositories from the evaluated Web3Bugs corpus:
+Complement repositories from the evaluated Web3Bugs corpus:
 
 * `59`, `2021-11-malt`
 * `104`, `2022-03-joyn`

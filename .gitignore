@@ -53,5 +53,6 @@ tmp/
 temp/
 *.tmp
 
-# ICSE oracle external seed data
+# ICSE data
 external/
+TODO.md

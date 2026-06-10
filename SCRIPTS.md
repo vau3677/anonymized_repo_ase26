@@ -108,12 +108,12 @@ python3 main.py --only <repo> <env flags>
 
 **How it works:**
 
-1. Builds an SDG over all derived contracts by visiting every function node and recording CFG blocks, read/write sites, branch-group metadata, function returns, and function lookup tables. Suppresses creation-phase findings and identifies admin-only functions.
+1. Builds a state-annotated ICFG over all derived contracts by visiting every function node and recording CFG blocks, successor edges, approximated call/return edges, read/write sites, branch-group metadata, function returns, and function lookup tables. Suppresses creation-phase findings and identifies admin-only functions.
 2. Synthesizes pseudo-variables for branch-groups with 2+ concrete state variables and functions whose returns expose multiple variables or pairs.
 3. Builds call-graph edges over internal/external calls to later classify triage shapes.
 4. Restricts analysis to user-callable public/external entrypoints, excluding constructors, common initializer/setup functions, and optionally role-gated/admin functions depending on flags.
 5. Performs reachability pruning from user-callable entries to remove all unreachable CFG blocks and related read/write sites.
-6. Enumerates raw stale read pairs from the SDG via `stale_read_pairs(sdg)`. Adds sink gating, same-variable forward re-read heuristic, and value-influence sink. Filters out benign admin-only writes, init-only variables, and init-latch cases.
+6. Enumerates raw stale read pairs from the state-annotated ICFG via `stale_read_pairs(sdg)`. Adds sink-context reachability, same-variable forward re-read heuristic, and value-influence sink. Filters out benign admin-only writes, init-only variables, and init-latch cases.
 7. Buckets surviving findings by transaction-set and variable identity are tagged with shape metadata. Findings are canonicalized, deduplicated, emitted, and JSON is saved if `ISD_JSON_OUT` is set.
 
 **Detection model:**
