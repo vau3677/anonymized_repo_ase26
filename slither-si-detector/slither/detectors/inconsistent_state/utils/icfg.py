@@ -1,6 +1,6 @@
 """
-sdg.py
-Implementation of our SDG for MV-SCAN
+icfg.py
+Implementation of our state-annotated ICFG for MV-SCAN
 """
 import os, re
 from typing import Dict, Set, Tuple
@@ -38,9 +38,9 @@ REQUIRE_SAME_SLOT_KEY = os.getenv("REQUIRE_SAME_SLOT_KEY", "1") == "1"
 ### Helpers for mapping-key agreement
 
 # Return { base_map_sv -> set(keys) } seen at a block for r/w
-def slot_keys_at(sdg, bid, kind: str) -> dict:
+def slot_keys_at(icfg, bid, kind: str) -> dict:
     out = defaultdict(set)
-    for v in sdg.blocks[bid][kind]:
+    for v in icfg.blocks[bid][kind]:
         if isinstance(v, MappingSlotVar): out[v.base].add(v.key)
     return out
 
@@ -135,8 +135,8 @@ def is_view_only(fn) -> bool:
     return getattr(fn, "is_view", False) or getattr(fn, "is_pure", False) # <=0.9.2
 
 # Detect if any non-[view/pure] func in CU calls fn
-def called_from_stateful(fn, sdg):
-    for f in sdg.fn_lookup.values():
+def called_from_stateful(fn, icfg):
+    for f in icfg.fn_lookup.values():
         if is_view_only(f): continue
         for n in f.nodes:
             for ir in n.irs:
@@ -168,7 +168,7 @@ def _subst_returns_with_args(callee, ir, expr_vars):
             sub_reads.add(rv)
     return sub_reads
 
-# wrapper so we can store <external selector> in the SDG and still hash/compare it like a real StateVariable
+# wrapper so we can store <external selector> in the ICFG and still hash/compare it like a real StateVariable
 class ExternalStateVar:
     __slots__ = ("selector", "addr")
     def __init__(self, selector: str, addr: str | None):
@@ -191,9 +191,9 @@ class ExternalStateVar:
         return f"EXT::{self.addr}::{self.selector}"
     __repr__ = __str__
 
-# Minimal SDG where blocks[bid] maps to r/w/succ and var_reads/writes map to blocks where bid is read/write
+# Minimal ICFG where blocks[bid] maps to r/w/succ and var_reads/writes map to blocks where bid is read/write
 BasicBlock = Tuple[str, int]
-class SDG:
+class ICFG:
     def __init__(self):
         self.blocks: Dict[BasicBlock, Dict[str, Set]] = {}
         self.var_reads: Dict[StateVariable, Set[BasicBlock]] = defaultdict(set)
@@ -203,7 +203,7 @@ class SDG:
         self.var_to_branchgroups: Dict[object, Set[int]] = defaultdict(set)
         self.fn_returns = {} # Function -> Set[Var]
 
-    # Populate the SDG with one basic block & its inter-procedural edges
+    # Populate the ICFG with one basic block & its inter-procedural edges
     def add_block(self, node: Node):
         block_id: BasicBlock = (node.function.full_name, node.node_id)
 
@@ -420,7 +420,7 @@ class SDG:
         for v in reads: self.var_reads[v].add(block_id)
         for v in writes: self.var_writes[v].add(block_id)
 
-### SDG helpers
+### ICFG helpers
 
 branch_types = {NodeType.IF}
 for t in ("REQUIRE", "ASSERT", "REVERT"):
@@ -443,14 +443,14 @@ def is_require_like(node):
         return False
 
 # Returns iff dst_bid is reachable from src_bid without passing through a block that writes `v` (other than the src)
-def reachable_without_overwrite(sdg: SDG, src_bid, dst_bid, v) -> bool:
+def reachable_without_overwrite(icfg: ICFG, src_bid, dst_bid, v) -> bool:
     # If the read happens in a block that is itself a branch/ext-call sink
     if src_bid == dst_bid: return True
 
     seen, q = set([src_bid]), deque([src_bid])
     while q:
         cur = q.popleft()
-        for nxt in sdg.blocks[cur]["succ"]:
+        for nxt in icfg.blocks[cur]["succ"]:
             # Reached target
             if nxt == dst_bid: return True
 
@@ -458,16 +458,16 @@ def reachable_without_overwrite(sdg: SDG, src_bid, dst_bid, v) -> bool:
             if nxt in seen: continue
 
             # Overwrote v, continue
-            if v in sdg.blocks[nxt]["writes"]: continue
+            if v in icfg.blocks[nxt]["writes"]: continue
 
             seen.add(nxt)
             q.append(nxt)
     return False
 
 # Does a read affect state
-def read_affects_state(sdg, read_bid, v):
+def read_affects_state(icfg, read_bid, v):
     fn_name, node_id = read_bid
-    fn = sdg.fn_lookup[fn_name]
+    fn = icfg.fn_lookup[fn_name]
     start = node_by_id(fn, node_id)
     if start is None: return False
 
@@ -491,31 +491,31 @@ def read_affects_state(sdg, read_bid, v):
     return False
 
 # Yields tuples (write, read, sv, 'stale_read'/'destructive_write')
-def stale_read_pairs(sdg: SDG):
-    for v, writes in sdg.var_writes.items():
+def stale_read_pairs(icfg: ICFG):
+    for v, writes in icfg.var_writes.items():
         # Strip the constructor/initializer writer blocks
-        writes = {w for w in writes if not (sdg.fn_lookup[w[0]].is_constructor \
-            or sdg.fn_lookup[w[0]].name.startswith("initialize"))}
+        writes = {w for w in writes if not (icfg.fn_lookup[w[0]].is_constructor \
+            or icfg.fn_lookup[w[0]].name.startswith("initialize"))}
         if not writes: continue
 
         # Tells us if detector sees r/w for the balance mapping
-        # if v.name.startswith("balances"): print(f"[sr_scan] scanning var {v.name} : {len(writes)} writes, {len(sdg.var_reads.get(v,[]))} reads")
+        # if v.name.startswith("balances"): print(f"[sr_scan] scanning var {v.name} : {len(writes)} writes, {len(icfg.var_reads.get(v,[]))} reads")
 
         # Skip constants, immutables, role-ids, and None
         if v is None or (isinstance(v, StateVariable) and (is_const(v) or is_role_bytes32(v))): continue
 
-        reads = sdg.var_reads.get(v, set())
+        reads = icfg.var_reads.get(v, set())
         if not reads: continue # no reads
 
-        if all(sdg.fn_lookup[w[0]].is_constructor or \
-            sdg.fn_lookup[w[0]].name.startswith("initialize") for w in writes): continue
+        if all(icfg.fn_lookup[w[0]].is_constructor or \
+            icfg.fn_lookup[w[0]].name.startswith("initialize") for w in writes): continue
 
         yielded = set() # (write_fn, read_fn, v)
         for w_bid in writes:
             for r_bid in reads:
                 # Debug print pairs
                 # if isinstance(v, MappingSlotVar):
-                #     print(f"[pair?] {v.name} BG slot={bool(sdg.var_to_branchgroups.get(v))} BG base={bool(sdg.var_to_branchgroups.get(v.base))}")
+                #     print(f"[pair?] {v.name} BG slot={bool(icfg.var_to_branchgroups.get(v))} BG base={bool(icfg.var_to_branchgroups.get(v.base))}")
 
                 key = (w_bid[0], r_bid[0], v)
 
@@ -523,18 +523,18 @@ def stale_read_pairs(sdg: SDG):
                 if key in yielded: continue
 
                 # New guard test
-                r_fn = sdg.fn_lookup[r_bid[0]]
+                r_fn = icfg.fn_lookup[r_bid[0]]
 
                 # Constructor reads don't race
                 if r_fn.is_constructor or r_fn.name.startswith("initialize"): continue
                 
                 # Keep pair if variable is in any branch-group
-                bg_set = sdg.var_to_branchgroups.get(v, set())
-                if isinstance(v, MappingSlotVar): bg_set |= sdg.var_to_branchgroups.get(v.base, set())
+                bg_set = icfg.var_to_branchgroups.get(v, set())
+                if isinstance(v, MappingSlotVar): bg_set |= icfg.var_to_branchgroups.get(v.base, set())
                 if bg_set:
                     affects = True
                 else:
-                    affects = read_affects_state(sdg, r_bid, v) or called_from_stateful(r_fn, sdg)
+                    affects = read_affects_state(icfg, r_bid, v) or called_from_stateful(r_fn, icfg)
                 if not affects: continue
 
                 # Same block has both read and write
@@ -543,13 +543,13 @@ def stale_read_pairs(sdg: SDG):
 
                 # No-op write pruning
                 if NOOP_WRITE_FILTER:
-                    w_fn = sdg.fn_lookup[w_bid[0]]
+                    w_fn = icfg.fn_lookup[w_bid[0]]
                     w_node = node_by_id(w_fn, w_bid[1])
                     if w_node is not None and is_self_copy_write(v, w_node): continue
 
                 # Require key overlap if both sides touch slots of >=1 common base mapping
                 if REQUIRE_SAME_SLOT_KEY:
-                    w_keys, r_keys = slot_keys_at(sdg, w_bid, "writes"), slot_keys_at(sdg, r_bid, "reads")
+                    w_keys, r_keys = slot_keys_at(icfg, w_bid, "writes"), slot_keys_at(icfg, r_bid, "reads")
                     common = set(w_keys.keys()) & set(r_keys.keys())
                     if common and not any(w_keys[b] & r_keys[b] for b in common): continue
 

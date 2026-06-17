@@ -3,15 +3,15 @@
 TOSEM -> Web3Bugs ID -> MV-Bench matcher
 1. Read TOSEM seed rows from oracle/tosem_seed_raw.csv.
 2. For each TOSEM row, split finding_slug into:
-     repo_slug   = text before '#', e.g. 2021-07-wildcredit
-     finding_id  = text after '#',  e.g. h-02
+    repo_slug   = text before '#', e.g. 2021-07-wildcredit
+    finding_id  = text after '#',  e.g. h-02
 3. Find Web3Bugs ID XX by searching Web3Bugs/reports/XX.md for:
-     slug: <repo_slug>
+    slug: <repo_slug>
 4. Fallback: search Web3Bugs/contracts/XX/README.md for <repo_slug>.
 5. Find MV-Bench sheets whose names start with XX, with the next char not a digit.
-     XX=1  matches 1, 1contracts
-     XX=1  does not match 10contracts, 112backd
-     XX=18 matches 18, 18contracts
+    XX=1  matches 1, 1contracts
+    XX=1  does not match 10contracts, 112backd
+    XX=18 matches 18, 18contracts
 6. In each candidate sheet, output every row containing the same finding_id.
 7. Output TOSEM row and full MV-Bench row side-by-side.
 """

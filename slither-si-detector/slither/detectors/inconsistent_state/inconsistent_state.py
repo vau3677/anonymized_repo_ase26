@@ -2,7 +2,7 @@
 MV-Scan (Multi-Variable State-Inconsistency Detection)
 
 Goals:
-- Build an SDG over the compilation and its storage layout.
+- Build an ICFG over the compilation and its storage layout.
 - Keep only the CFG blocks that are reachable from user-callable entrypoints.
 - Detect the stale-read/destructive-write pattern and group entangled variables instead of just the primary variable.
 - Bucket by transaction-sets and variables so that we can track multi-variable groupings.
@@ -35,7 +35,7 @@ from slither.core.variables import StateVariable
 from slither.core.declarations.function_contract import FunctionContract
 from slither.core.source_mapping.source_mapping import Source
 from slither.slithir.operations import HighLevelCall, InternalCall, Assignment
-from .utils.sdg import (SDG, stale_read_pairs, BasicBlock, ExternalStateVar, MappingSlotVar, branch_types, reachable_without_overwrite, var_key_txt)
+from .utils.icfg import (ICFG, stale_read_pairs, BasicBlock, ExternalStateVar, MappingSlotVar, branch_types, reachable_without_overwrite, var_key_txt)
 
 # Parses DIVERGENCE_BUDGET (0: no traversal | 0<n<inf bounds to n | None: unbounded)
 def _parse_divergence_budget():
@@ -71,8 +71,8 @@ COARSE_DEDUP = os.getenv("COARSE_DEDUP", "1") == "1" # (TODO: remove?)
 SINK_TEST = (os.getenv("SINK_TEST") or "").strip().lower()
 
 # get block id's reads and return if the var is in its reads
-def block_reads_var(bid, sdg, var) -> bool:
-    r = sdg.blocks.get(bid, {}).get("reads", set())
+def block_reads_var(bid, icfg, var) -> bool:
+    r = icfg.blocks.get(bid, {}).get("reads", set())
     if var in r: return True
     if isinstance(var, MappingSlotVar): return (var.base in r)
     return False
@@ -138,11 +138,11 @@ def update_aliases_in_block(node, tokens):
 # (a) control-flow at a branch predicate
 # (b) arguments/eth value to an ext/internal call
 # (c) RHS of a storage write to any storage var/slot
-def value_influence_hits_sensitive_sink(var, start_bid, sdg, budget) -> bool:
+def value_influence_hits_sensitive_sink(var, start_bid, icfg, budget) -> bool:
     if budget == 0: return False
 
     # Same-node sink
-    if is_critical_sink_bid(start_bid, sdg) and block_reads_var(start_bid, sdg, var): return True
+    if is_critical_sink_bid(start_bid, icfg) and block_reads_var(start_bid, icfg, var): return True
 
     seen = {start_bid}
     q = deque([start_bid])
@@ -151,35 +151,35 @@ def value_influence_hits_sensitive_sink(var, start_bid, sdg, budget) -> bool:
     while q and (unlimited or steps < budget):
         cur = q.popleft()
         steps += 1
-        node = node_of(cur, sdg)
+        node = node_of(cur, icfg)
 
         # Branch predicate uses the variable
-        if node and is_branch_node(node) and block_reads_var(cur, sdg, var):
-            if reachable_without_overwrite(sdg, start_bid, cur, var):
+        if node and is_branch_node(node) and block_reads_var(cur, icfg, var):
+            if reachable_without_overwrite(icfg, start_bid, cur, var):
                 return True
 
         # Any call in the block and the block reads the variable
         if node and any(isinstance(ir, (HighLevelCall, InternalCall)) for ir in getattr(node, "irs", [])):
-            if block_reads_var(cur, sdg, var) and reachable_without_overwrite(sdg, start_bid, cur, var):
+            if block_reads_var(cur, icfg, var) and reachable_without_overwrite(icfg, start_bid, cur, var):
                 return True
 
         # Storage write in the block and the block reads the variable
         if node and (getattr(node, "variables_written", None) or any(getattr(ir, "lvalue", None) for ir in getattr(node, "irs", []))):
-            if block_reads_var(cur, sdg, var) and reachable_without_overwrite(sdg, start_bid, cur, var):
+            if block_reads_var(cur, icfg, var) and reachable_without_overwrite(icfg, start_bid, cur, var):
                 return True
 
-        for nxt in sdg.blocks.get(cur, {}).get("succ", []):
+        for nxt in icfg.blocks.get(cur, {}).get("succ", []):
             if nxt not in seen:
                 seen.add(nxt)
                 q.append(nxt)
     return False
 
 # sink-test scheduler
-def hits_sink(var, read_bid, sdg) -> bool:
+def hits_sink(var, read_bid, icfg) -> bool:
     if SINK_TEST == "value":
-        return value_influence_hits_sensitive_sink(var, read_bid, sdg, DIVERGENCE_BUDGET)
+        return value_influence_hits_sensitive_sink(var, read_bid, icfg, DIVERGENCE_BUDGET)
     if SINK_TEST == "samevar":
-        return forward_slice_hits_sink_from(var, read_bid, sdg, DIVERGENCE_BUDGET)
+        return forward_slice_hits_sink_from(var, read_bid, icfg, DIVERGENCE_BUDGET)
     return True
 
 ### Admin/role/timelock guards
@@ -205,8 +205,8 @@ def is_admin_only(fn) -> bool:
 ### Helpers for classifying nodes/shapes
 
 # Resolve a block id to its node
-def node_of(bid, sdg):
-    fn = sdg.fn_lookup.get(bid[0])
+def node_of(bid, icfg):
+    fn = icfg.fn_lookup.get(bid[0])
     if fn is None: return None # missing
     for n in getattr(fn, "nodes", []):
         if n.node_id == bid[1]: return n
@@ -216,11 +216,11 @@ def is_branch_node(node) -> bool: return (node.type in branch_types) # Check if 
 
 
 # (DivertScan §4.2.3) Keep reads that reach external-call sites called "critical sinks." Call destination contamination could cause divergence
-def is_external_call_node(node, sdg) -> bool:
+def is_external_call_node(node, icfg) -> bool:
     if node is None: return False # Node must exist
 
     # Heuristic for "critical sink": an external (cross-contract) call or dynamic low-level call
-    fn = sdg.fn_lookup.get(node.function.full_name)
+    fn = icfg.fn_lookup.get(node.function.full_name)
     if fn is None: return False
     for ir in getattr(node, "irs", []):
         if isinstance(ir, HighLevelCall):
@@ -231,18 +231,18 @@ def is_external_call_node(node, sdg) -> bool:
     return False
 
 # (§4.2.3 Extension) A block is a critical sink if it's a branch predicate or an external call site.
-def is_critical_sink_bid(bid, sdg) -> bool:
-    node = node_of(bid, sdg)
+def is_critical_sink_bid(bid, icfg) -> bool:
+    node = node_of(bid, icfg)
     if node is None: return False # node must exist
-    return is_branch_node(node) or is_external_call_node(node, sdg)
+    return is_branch_node(node) or is_external_call_node(node, icfg)
 
 # (§4.2.3 Extension) Budgeted forward slice from a read to see if the same var is re-read at a sink
-def forward_slice_hits_sink_from(var, start_bid, sdg, budget=DIVERGENCE_BUDGET) -> bool:
+def forward_slice_hits_sink_from(var, start_bid, icfg, budget=DIVERGENCE_BUDGET) -> bool:
     if budget == 0: return False # NO traversal
-    if start_bid in sdg.var_reads.get(var, set()) and is_critical_sink_bid(start_bid, sdg): return True
+    if start_bid in icfg.var_reads.get(var, set()) and is_critical_sink_bid(start_bid, icfg): return True
 
     # Bounded forward slice along CFG from the first read of a var at a start-bid
-    reads_of_var = sdg.var_reads.get(var, set())
+    reads_of_var = icfg.var_reads.get(var, set())
     seen: set[BasicBlock] = {start_bid}
     q, steps = deque([start_bid]), 0
     unlimited = (budget is None)
@@ -251,10 +251,10 @@ def forward_slice_hits_sink_from(var, start_bid, sdg, budget=DIVERGENCE_BUDGET) 
         steps += 1
 
         # If we reach a re-read, that is notable! Otherwise keep going
-        if cur in reads_of_var and is_critical_sink_bid(cur, sdg):
+        if cur in reads_of_var and is_critical_sink_bid(cur, icfg):
             # Check for no overwrite along that part of CFG
-            if reachable_without_overwrite(sdg, start_bid, cur, var): return True
-        for nxt in sdg.blocks.get(cur, {}).get("succ", []):
+            if reachable_without_overwrite(icfg, start_bid, cur, var): return True
+        for nxt in icfg.blocks.get(cur, {}).get("succ", []):
             if nxt not in seen:
                 seen.add(nxt)
                 q.append(nxt)
@@ -332,20 +332,20 @@ def fn_has_post_guard_for(fn, L) -> bool:
     return False
 
 # Check if predicates are present
-def preds_of(bid, sdg):
-    info = sdg.blocks.get(bid, {})
+def preds_of(bid, icfg):
+    info = icfg.blocks.get(bid, {})
     if "pred" in info and info["pred"] is not None: return list(info["pred"])
     
     # Derive preds from successor edges
     ps = []
-    for other, inf in sdg.blocks.items():
+    for other, inf in icfg.blocks.items():
         succs = inf.get("succ", set()) or []
         if bid in succs: ps.append(other)
     return ps
 
 # We treat constructor writes as creation-phase, and check if the function is only reached from there
-def is_creation_phase(v, w_bid, sdg) -> bool:
-    fn = sdg.fn_lookup[w_bid[0]]
+def is_creation_phase(v, w_bid, icfg) -> bool:
+    fn = icfg.fn_lookup[w_bid[0]]
     if getattr(fn, "is_constructor", False): return True
     nm = fn.name.lower()
     if nm in {"bootstrap", "init","initialize","setup","set_up"} or any("initializer" in m.name.lower() for m in getattr(fn, "modifiers", [])):
@@ -353,19 +353,19 @@ def is_creation_phase(v, w_bid, sdg) -> bool:
     return False
 
 # Accept if along any path from the write to the function return, there's an update moving L out of P_pre
-def has_monotone_flip_write(L, w_bid, sdg) -> bool:
+def has_monotone_flip_write(L, w_bid, icfg) -> bool:
     # Over-approximate postdom region: all forward-reachable nodes in the function.
-    fn, post, q = sdg.fn_lookup[w_bid[0]], set(), [w_bid]
+    fn, post, q = icfg.fn_lookup[w_bid[0]], set(), [w_bid]
     while q:
         cur = q.pop()
-        for nxt in sdg.blocks[cur]["succ"]:
+        for nxt in icfg.blocks[cur]["succ"]:
             if nxt not in post:
                 post.add(nxt)
                 q.append(nxt)
     
     L0 = L[0].lstrip("_").lower()
     for b in post:
-        node = node_of(b, sdg)
+        node = node_of(b, icfg)
         if node is None: continue
         for ir in getattr(node, "irs", []):
             if isinstance(ir, Assignment):
@@ -380,10 +380,10 @@ def has_monotone_flip_write(L, w_bid, sdg) -> bool:
     return False
 
 # Reject if we assign L back to a pre-init value anywhere in user-reachable code
-def has_reset(L, sdg) -> bool:
+def has_reset(L, icfg) -> bool:
     lname = L[0].lstrip("_").lower()
-    for b in sdg.blocks:
-        node = node_of(b, sdg)
+    for b in icfg.blocks:
+        node = node_of(b, icfg)
         if node is None: continue
         for ir in getattr(node, "irs", []):
             if isinstance(ir, Assignment):
@@ -393,14 +393,14 @@ def has_reset(L, sdg) -> bool:
     return False
 
 # For every public/ext entry reaching w_bid, ensure >=1 node on the path has a predicate mentioning L pre-initialization
-def entry_paths_guarded(L, w_bid, sdg) -> bool:
+def entry_paths_guarded(L, w_bid, icfg) -> bool:
     lname = L[0].lstrip("_").lower()
 
     # Walk backwards to entries
     seen, q, guarded_entries, entries = set(), [w_bid], set(), set()
     while q:
         cur = q.pop()
-        fn = sdg.fn_lookup[cur[0]]
+        fn = icfg.fn_lookup[cur[0]]
         if fn.visibility in ("public", "external"):
             entries.add(cur[0])
 
@@ -408,21 +408,21 @@ def entry_paths_guarded(L, w_bid, sdg) -> bool:
             if any(lname in (str(getattr(n, "expression", "")).lower() or "") for n in fn.nodes):
                 guarded_entries.add(cur[0])
 
-        for pred in preds_of(cur, sdg):
+        for pred in preds_of(cur, icfg):
             if pred not in seen:
                 seen.add(pred)
                 q.append(pred)
     return entries and entries.issubset(guarded_entries)
 
 # Gets all L for which the func behaves like an initializer
-def initializer_fn(fn, sdg):
+def initializer_fn(fn, icfg):
     entry_bid = fn_entry_bid(fn)
     if entry_bid is None: return set()
 
     pre_latches = latch_candidates_from_fn_guards(fn)
     ok = set()
     for L in pre_latches:
-        if has_monotone_flip_write((L, "eq", None), entry_bid, sdg) and not has_reset((L, "eq", None), sdg):
+        if has_monotone_flip_write((L, "eq", None), entry_bid, icfg) and not has_reset((L, "eq", None), icfg):
             ok.add(L)
     return ok
 
@@ -432,14 +432,14 @@ def initializer_fn(fn, sdg):
   (b) a flip to move L out of pre that postdominates the write on that path,
   (c) no resets to bring L back into pre
 """
-def passes_monotone_latch(v, w_bid, sdg) -> bool:
+def passes_monotone_latch(v, w_bid, icfg) -> bool:
     # (a) Any predecessor chain nodes
-    guard_nodes, work = {w_bid}, preds_of(w_bid, sdg)
+    guard_nodes, work = {w_bid}, preds_of(w_bid, icfg)
     while work:
         b = work.pop()
         if b in guard_nodes: continue
         guard_nodes.add(b)
-        work.extend(preds_of(b, sdg))
+        work.extend(preds_of(b, icfg))
 
     # (b) Look for predicates of the form !x, x==c, (f & C)==0, _init < k
     latch_candidates = set()
@@ -471,19 +471,19 @@ def passes_monotone_latch(v, w_bid, sdg) -> bool:
 
     # Check flip and no-reset for every candidate
     for L in latch_candidates:
-        if has_monotone_flip_write(L, w_bid, sdg) and not has_reset(L, sdg):
-            if entry_paths_guarded(L, w_bid, sdg): return True
+        if has_monotone_flip_write(L, w_bid, icfg) and not has_reset(L, icfg):
+            if entry_paths_guarded(L, w_bid, icfg): return True
 
     return False
 
 # INIT_ONLY heuristics for filtering out any false positives that are found in initializers
-def _init_only_vars(sdg) -> set:
+def _init_only_vars(icfg) -> set:
     init_only = set()
-    state_vars = [v for v in sdg.var_writes.keys() if not isinstance(v, (MappingSlotVar, MultiVarGroup, ExternalStateVar))]
+    state_vars = [v for v in icfg.var_writes.keys() if not isinstance(v, (MappingSlotVar, MultiVarGroup, ExternalStateVar))]
     for v in state_vars:
-        writes = sdg.var_writes.get(v, set())
+        writes = icfg.var_writes.get(v, set())
         if not writes: continue
-        if all(is_creation_phase(v, bid, sdg) or passes_monotone_latch(v, bid, sdg) for bid in writes): init_only.add(v)
+        if all(is_creation_phase(v, bid, icfg) or passes_monotone_latch(v, bid, icfg) for bid in writes): init_only.add(v)
     return init_only
 
 ### Variable id normalization for bucketing
@@ -626,17 +626,17 @@ def slot_of(v):
 
     return legacy_slot_fallback(v) # NO build-info! (this usually signals a bug so further research can fix these)
 
-### SDG construction
+### ICFG construction
 
-def build_sdg(compilation_unit) -> SDG:
-    sdg = SDG()
+def build_icfg(compilation_unit) -> ICFG:
+    icfg = ICFG()
 
-    # Visit every node of every function of every contract and add it to the SDG
+    # Visit every node of every function of every contract and add it to the ICFG
     for contract in compilation_unit.contracts_derived:
         for fn in contract.functions_declared:
             # Populates blocks (CFG), var_reads/writes, fn_lookup, branch_groups, fn_returns, var_to_branchgroups, etc
-            for node in fn.nodes: sdg.add_block(node)
-    return sdg
+            for node in fn.nodes: icfg.add_block(node)
+    return icfg
 
 
 ### (DivertScan) §4.2.1 Entry reachability and user-callable heuristics
@@ -666,8 +666,8 @@ def filter_bid_map(bid_map: dict[StateVariable, set[BasicBlock]], keep):
         if not bid_map[v]: del bid_map[v]
 
 # Helper to return (filename, first_line) for a (fn_name, node_id) block id
-def src(bid, sdg):
-    fn = sdg.fn_lookup[bid[0]]
+def src(bid, icfg):
+    fn = icfg.fn_lookup[bid[0]]
     if fn is None: return "<unknown>", 0
 
     node = next((n for n in fn.nodes if n.node_id == bid[1]), None)
@@ -707,7 +707,7 @@ Pack variable metadata for JSON
 • slot/base_slot/key where applicable
 • branch_groups that mention the variable, useful for context
 """
-def var_meta(v, sdg):
+def var_meta(v, icfg):
     vname_prettified = prettify(v.base if isinstance(v, MappingSlotVar) else v) or v.name
 
     # Handle multi-variable group
@@ -732,8 +732,8 @@ def var_meta(v, sdg):
         meta.update({"kind": "state", "slot": slot_of(v)})
 
     # Attach any branch-group id(s) that references this variable/base-mapping
-    bg = sdg.var_to_branchgroups.get(v, set())
-    if isinstance(v, MappingSlotVar): bg |= sdg.var_to_branchgroups.get(v.base, set())
+    bg = icfg.var_to_branchgroups.get(v, set())
+    if isinstance(v, MappingSlotVar): bg |= icfg.var_to_branchgroups.get(v.base, set())
     if bg: meta["branch_groups"] = sorted(bg)
 
     return meta
@@ -758,7 +758,7 @@ class InconsistentState(AbstractDetector):
     """
     Detector pipeline
         (1) Compute storage layout for slot resolution
-        (2) Build the SDG (CFG, def-use, and metadata)
+        (2) Build the ICFG (CFG, def-use, and metadata)
         (3) Create pseudo-variables:
             (a) Branch groups with >= 2 variables
             (b) Functions returning multiple variables
@@ -783,29 +783,29 @@ class InconsistentState(AbstractDetector):
         # Set of all JSON-encoded findings and results
         json_findings, results = [], []
 
-        # Builds the SDG
-        sdg = build_sdg(self.compilation_unit)
+        # Builds the ICFG
+        icfg = build_icfg(self.compilation_unit)
 
         # Identify all admin-only functions
         global ADMIN_ONLY
-        ADMIN_ONLY = { f.full_name for f in sdg.fn_lookup.values() if is_admin_only(f) }
+        ADMIN_ONLY = { f.full_name for f in icfg.fn_lookup.values() if is_admin_only(f) }
 
         # Compute initialization-only variables before prune step
         pre_prune_init_only = set()
         init_latches_by_outer = defaultdict(set)
         all_init_latches: set[str] = set()
-        if INIT_ONLY_FILTER: pre_prune_init_only = _init_only_vars(sdg)
+        if INIT_ONLY_FILTER: pre_prune_init_only = _init_only_vars(icfg)
         if INIT_ONLY_FILTER:
-            for fn in sdg.fn_lookup.values():
+            for fn in icfg.fn_lookup.values():
                 if fn.visibility not in ("public", "external"): continue
                 outer = normalize_entry_name(fn.full_name.split(".")[0])
-                Ls = initializer_fn(fn, sdg)
+                Ls = initializer_fn(fn, icfg)
                 if Ls:
                     init_latches_by_outer[outer].update(Ls)
                     all_init_latches |= Ls
         post_guarded_by_latch = defaultdict(set)
         if INIT_ONLY_FILTER and all_init_latches:
-            for fn in sdg.fn_lookup.values():
+            for fn in icfg.fn_lookup.values():
                 if fn.visibility not in ("public", "external"): continue
                 outer = normalize_entry_name(fn.full_name.split(".")[0])
                 for L in all_init_latches:
@@ -813,7 +813,7 @@ class InconsistentState(AbstractDetector):
         
         # Pseudovariables from branch-groups with >= 2 non-mapping-slot state variables
         bg_pseudos = {}
-        for gid, members in sdg.branch_groups.items():
+        for gid, members in icfg.branch_groups.items():
             concrete = tuple(sorted(
                 (v for v in members if not isinstance(v, MappingSlotVar)),
                 key=lambda x: x.name,
@@ -825,10 +825,10 @@ class InconsistentState(AbstractDetector):
             pseudo = MultiVarGroup(gid, concrete)
             bg_pseudos[gid] = pseudo
 
-            # Union read/write so it behaves like a variable within the SDG
+            # Union read/write so it behaves like a variable within the ICFG
             for v in concrete:
-                sdg.var_reads[pseudo] |= sdg.var_reads.get(v, set())
-                sdg.var_writes[pseudo] |= sdg.var_writes.get(v, set())
+                icfg.var_reads[pseudo] |= icfg.var_reads.get(v, set())
+                icfg.var_writes[pseudo] |= icfg.var_writes.get(v, set())
 
         # Map concrete variable to the pseudovariable(s) that it participates in
         var_to_pseudo = defaultdict(set)
@@ -838,7 +838,7 @@ class InconsistentState(AbstractDetector):
         # - Include BOTH mapping slots and their base mapping in the group, so co-use like
         #   balances[user] together with balances (base) doesn't get collapsed.
         # - Union reads/writes from BOTH the slot and the base into the pseudo.
-        for fn, ret_vars in sdg.fn_returns.items():
+        for fn, ret_vars in icfg.fn_returns.items():
 
             # Collect slots and bases
             slots_and_bases = set()
@@ -868,8 +868,8 @@ class InconsistentState(AbstractDetector):
 
             # Union r/w from both slots and bases; base->pseudo bucket mapping
             for v in slots_and_bases:
-                sdg.var_reads[pseudo] |= sdg.var_reads.get(v, set())
-                sdg.var_writes[pseudo] |= sdg.var_writes.get(v, set())
+                icfg.var_reads[pseudo] |= icfg.var_reads.get(v, set())
+                icfg.var_writes[pseudo] |= icfg.var_writes.get(v, set())
                 var_to_pseudo[(v.base if isinstance(v, MappingSlotVar) else v)].add(pseudo)
 
         # # Flag to show the pseudovariables in order to better understand grouping structure
@@ -879,7 +879,7 @@ class InconsistentState(AbstractDetector):
         # Build call-graph edges
         call_edges_intra: dict[str, set[str]] = defaultdict(set) # NOTE: Currently unused, but left for future work
         call_edges_any: dict[str, set[str]] = defaultdict(set)
-        for fn in sdg.fn_lookup.values():
+        for fn in icfg.fn_lookup.values():
             for n in fn.nodes:
                 for ir in getattr(n, "irs", []):
                     if not isinstance(ir, (HighLevelCall, InternalCall)): continue
@@ -890,7 +890,7 @@ class InconsistentState(AbstractDetector):
                     if caller_ctr is callee_ctr: call_edges_intra[fn.full_name].add(callee.full_name)
 
         # (DivertScan §4.2.1) Restrict to public or external entries deemed user-callable
-        public_entries: set[BasicBlock] = { bid for bid in sdg.blocks if (fn := sdg.fn_lookup.get(bid[0])) and is_user_callable(fn) }
+        public_entries: set[BasicBlock] = { bid for bid in icfg.blocks if (fn := icfg.fn_lookup.get(bid[0])) and is_user_callable(fn) }
 
         # Worklist reachability from public_entries to track the entry owner of each block
         keep: set[BasicBlock] = set()
@@ -905,24 +905,24 @@ class InconsistentState(AbstractDetector):
             keep.add(cur)
             
             # Every kept block inherits the outer public entry that reaches it in the same tx
-            for nxt in sdg.blocks[cur]["succ"]:
+            for nxt in icfg.blocks[cur]["succ"]:
                 if nxt not in entry_of: entry_of[nxt] = entry_of[cur]
                 stack.append(nxt)
 
         # Prune unreachable blocks and synchronize read/write maps
-        sdg.blocks = {b: info for b, info in sdg.blocks.items() if b in keep}
-        filter_bid_map(sdg.var_reads, keep)
-        filter_bid_map(sdg.var_writes, keep)
+        icfg.blocks = {b: info for b, info in icfg.blocks.items() if b in keep}
+        filter_bid_map(icfg.var_reads, keep)
+        filter_bid_map(icfg.var_writes, keep)
 
         # Bucket findings by tx-set: var: pairs with shape tags
         buckets = defaultdict(lambda: defaultdict(list)) # {tx_id: {var: [(w_bid,r_bid,pattern,srcs...)]}}
         shapes_by_key = defaultdict(lambda: {"shared_callee": False, "reentrant": False})
 
-        # Enumerate raw pairs by SDG def-use
-        for w_bid, r_bid, var, pattern in stale_read_pairs(sdg):
+        # Enumerate raw pairs by ICFG def-use
+        for w_bid, r_bid, var, pattern in stale_read_pairs(icfg):
             # Skip when the writer is admin-only but the reader is a normal user entry
             if ADMIN_WRITES_BENIGN:
-                w_full, r_full = sdg.fn_lookup[w_bid[0]].full_name, sdg.fn_lookup[r_bid[0]].full_name
+                w_full, r_full = icfg.fn_lookup[w_bid[0]].full_name, icfg.fn_lookup[r_bid[0]].full_name
                 if (w_full in ADMIN_ONLY) and (r_full not in ADMIN_ONLY): continue
 
             # Skip pairs where the written var is proven init-only
@@ -939,7 +939,7 @@ class InconsistentState(AbstractDetector):
             outer_w, outer_r = entry_of[w_bid], entry_of[r_bid]
 
             # Sink check is gated by the env variable set
-            if not hits_sink(var, r_bid, sdg): continue
+            if not hits_sink(var, r_bid, icfg): continue
 
             # VU: [FIXED] Drop benign findings if runtime is post-gated by the same latch that init flips
             if INIT_ONLY_FILTER:
@@ -948,7 +948,7 @@ class InconsistentState(AbstractDetector):
 
             # (DivertScan §4.2.1) (function-level) Mark reachable reentrant pairs when outer entries mutually call
             reentrant = False
-            w_full, r_full = sdg.fn_lookup[w_bid[0]].full_name, sdg.fn_lookup[r_bid[0]].full_name
+            w_full, r_full = icfg.fn_lookup[w_bid[0]].full_name, icfg.fn_lookup[r_bid[0]].full_name
             if outer_w != outer_r:
                 if (r_full in call_edges_any.get(w_full, set())) or (w_full in call_edges_any.get(r_full, set())):
                     reentrant = True
@@ -969,8 +969,8 @@ class InconsistentState(AbstractDetector):
                 shapes_by_key[(tx_id, var_key(var))]["reentrant"] = True
 
             # Bucketing
-            w_file, w_line = src(w_bid, sdg)
-            r_file, r_line = src(r_bid, sdg)
+            w_file, w_line = src(w_bid, icfg)
+            r_file, r_line = src(r_bid, icfg)
             buckets[tx_id][var].append((w_bid, r_bid, pattern, w_file, w_line, r_file, r_line))
 
             base_v = var.base if isinstance(var, MappingSlotVar) else var
@@ -1003,8 +1003,8 @@ class InconsistentState(AbstractDetector):
             writers, readers, op_patterns = [], [], set()
             for v, pairs in var_map.items():
                 for w_bid, r_bid, op_pat, w_file, w_line, r_file, r_line in pairs[:3]:
-                    w_sig, w_sel = fn_id(sdg.fn_lookup[w_bid[0]])
-                    r_sig, r_sel = fn_id(sdg.fn_lookup[r_bid[0]])
+                    w_sig, w_sel = fn_id(icfg.fn_lookup[w_bid[0]])
+                    r_sig, r_sel = fn_id(icfg.fn_lookup[r_bid[0]])
                     writers.append((w_sig, w_sel, w_file, w_line))
                     readers.append((r_sig, r_sel, r_file, r_line))
                     op_patterns.add(op_pat)
@@ -1014,7 +1014,7 @@ class InconsistentState(AbstractDetector):
                 "shared_callee": any(shapes_by_key[(tx_id, var_key(v))]["shared_callee"] for v in vars_here),
                 "reentrant": any(shapes_by_key[(tx_id, var_key(v))]["reentrant"] for v in vars_here),
             }
-            per_var_shapes = [{ "var": var_meta(v, sdg), "shape": shapes_by_key[(tx_id, var_key(v))] } for v in vars_here]
+            per_var_shapes = [{ "var": var_meta(v, icfg), "shape": shapes_by_key[(tx_id, var_key(v))] } for v in vars_here]
 
             """
             We canonicalize and deduplicate the pattern, variables, transaction set, writers, and readers.
@@ -1045,7 +1045,7 @@ class InconsistentState(AbstractDetector):
             # JSON finding
             json_findings.append({
                 "pattern": bucket_class,
-                "vars": [var_meta(v, sdg) for v in vars_here],
+                "vars": [var_meta(v, icfg) for v in vars_here],
                 "tx_set": tx_list,
                 "writers": [{"sig": sig, "selector": sel, "file": f, "line": l} for sig, sel, f, l in writers],
                 "readers": [{"sig": sig, "selector": sel, "file": f, "line": l} for sig, sel, f, l in readers],

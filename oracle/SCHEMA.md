@@ -1,64 +1,151 @@
 # Oracle Schema
 
-> Each row is one known bug from TOSEM/Web3Bugs.
+This file documents the current oracle artifacts. The strict recall inputs are complete; Annotator 2 labels are collected separately through the blind packet.
 
-## Core source metadata
+## Canonical Strict Recall Tables
 
-- `oracle_id`: stable local identifier
-- `source_dataset`: `TOSEM`, `Web3Bugs`, or `Code4rena`
-- `source_category`: original source category (e.g. `Dynamic Dependent Update Omission`)
-- `source_subcategory`: optional source subtype
-- `reporting_time`: date reported by source
-- `bug_link`: link to the Code4rena or Github finding
-- `finding_slug`: slug (e.g. `2021-12-vader#h-10`)
-- `contest_slug`: contest part (e.g. `2021-12-vader`)
-- `finding_id`: finding id (e.g. `h-10`)
-- `project_slug`: normalized project name (e.g. `vader`)
-- `finding_title`: short title derived from the source if available
+### `oracle/tosem_oracle_review_queue.csv`
 
-## Source evidence
+One row per manually reviewed TOSEM overlap finding. Core source and overlap fields:
 
-- `source_root_cause`: original source root-cause summary
-- `source_exploitation_method`: original source exploitation summary
-- `source_fix_strategy`: original source fix summary
-- `evidence_source`: bug report, fix diff, code comment, docs, PoC, vendor confirmation, etc.
+- `oracle_id`
+- `finding_slug`
+- `repo_slug`
+- `finding_id_norm`
+- `source_category`
+- `web3bugs_ids`
+- `web3bugs_basis`
+- `mvbench_status`
+- `mvbench_candidate_sheets`
+- `finding_match_count`
+- `b0_match_count`
+- `matched_ablations`
+- `matched_types`
+- `source_root_cause`
+- `source_exploitation_method`
+- `evidence_source`
+- `mvbench_b0_rows`
+- `mvbench_all_matched_rows`
 
-## MV-SI semantic labeling
+Manual review and strict recall fields:
 
-- `semantic_label`: one of `MV-SI`, `SV-SI`, `ISU-other`, `other-logical-bug`, `ambiguous`, `excluded`.
-- `mvsi_subtype`: `Type-I-temporal-checkpoint`, `Type-II-asset-utility`, `Type-III-governance-config`, `other-MVSI`, or `NA`.
-- `violated_invariant`: relational invariant in prose.
-- `coupled_state_entities`: comma-separated state variables, slots, or external proxies.
-- `primary_state_entity`: source-of-truth state entity if identifiable.
-- `counterpart_state_entity`: stale/cached/redundant counterpart if identifiable.
-- `external_proxy_state`: remote/cross-contract state if applicable.
-- `desynchronization_step`: operation/path that updates/consumes one constituent without synchronizing counterpart.
-- `sink_type`: branch, accounting, external-call, storage-write, mint, burn, transfer, liquidation, reward, governance, access-control, other.
-- `impact_type`: loss, DoS, overmint, underpayment, overpayment, governance, accounting, other.
-- `attacker_model`: unprivileged, privileged, governance, unclear.
+- `annotator_1_semantic_label`
+- `annotator_1_mvsi_subtype`
+- `annotator_1_strict_b0_match`
+- `annotator_1_matched_b0_bucket_id`
+- `annotator_1_fn_reason`
+- `annotator_1_notes`
 
-## Evaluation overlap and strict recall
+### `oracle/web3bugs_mvbench_review_queue.csv`
 
-- `overlaps_mvscan_eval_repo`: yes/no/maybe.
-- `matched_eval_label`: matching label from MV-Scan evaluated repo ledger.
-- `strict_b0_match`: yes/no/not_checked.
-- `matched_b0_bucket_id`: stable MV-Scan bucket/finding key if matched.
-- `fn_reason`: internal strict-match category. MV-SI misses use `FN0-*`, `FN1-*`, `FN7-*`, etc.; strict matches use `NA-strict-B0-match`; non-MV-SI rows use `NA-not-MVSI`.
+One row per reviewed Web3Bugs/Code4rena complement finding. Core source fields:
 
-## Annotation
+- `web3bugs_id`
+- `mvbench_sheet`
+- `oracle_id`
+- `source_dataset`
+- `source_category`
+- `source_subcategory`
+- `reporting_time`
+- `bug_link`
+- `finding_slug`
+- `contest_slug`
+- `finding_id`
+- `project_slug`
+- `finding_title`
+- `source_root_cause`
+- `source_exploitation_method`
+- `source_fix_strategy`
+- `evidence_source`
+- `overlaps_mvscan_eval_repo`
+- `mvbench_candidate_rows`
 
-- `annotator_1_label`
-- `annotator_2_label`
-- `adjudicated_label`
-- `adjudication_notes`
-- `notes`
+Manual review and strict recall fields:
 
-## B0 matching rules
+- `annotator_1_semantic_label`
+- `annotator_1_mvsi_subtype`
+- `annotator_1_strict_b0_match`
+- `annotator_1_matched_b0_bucket_id`
+- `annotator_1_fn_reason`
+- `annotator_1_notes`
 
-1. `strict_B0_match`: the main paper should only report this
-2. `diagnostic_B0_overlap`: used internally for near-miss analysis, debugging, and relaxed artifact diagnostics.
+`annotator_1_notes` preserves the compact rationale previously held in separate A1-only columns, including invariant, coupled entities, desynchronization step, sink, impact, attacker model, label notes, and strict-match notes when available.
 
-## Strict B0 matching rule
+## Generated Tables
+
+- `oracle/known_bug_strict_recall_table.csv`: generated strict recall summary.
+
+## A1 Reliability Source Tables
+
+These checked-in CSVs contain Annotator 1 labels and rationales for reliability checks that are not part of the known-bug strict recall numerator/denominator.
+
+### `oracle/zero_day_annotation_reliability.csv`
+
+One row per candidate zero-day detector finding:
+
+- `finding_key`
+- `sheets`
+- `ablations`
+- `representative_row_idx`
+- `finding_kind`
+- `finding_header`
+- `evidence_excerpt`
+- `annotator_1_zero_day_status`
+- `annotator_1_semantic_label`
+- `annotator_1_notes`
+
+`annotator_1_zero_day_status` uses `confirmed-zero-day`, `duplicate-known-bug`, `not-a-bug`, `insufficient-evidence`, or `out-of-scope`.
+
+### `oracle/b0_stratified_sample_reliability.csv`
+
+One row per stratified B0 alert sample:
+
+- `sample_id`
+- `sample_seed`
+- `stratum_kind`
+- `sheet`
+- `row_idx`
+- `finding_key`
+- `finding_header`
+- `evidence_excerpt`
+- `annotator_1_b0_label`
+- `annotator_1_semantic_label`
+- `annotator_1_notes`
+
+`annotator_1_b0_label` uses `TP`, `FP`, or `ambiguous`. The original sample stratum is not treated as authoritative; A1 labels are the independent reviewed decision.
+
+## Annotator 2 Blind Packet
+
+- `oracle/annotator2_packet/known_bug_review_blind.csv`
+- `oracle/annotator2_packet/zero_day_review_blind.csv`
+- `oracle/annotator2_packet/b0_sample_review_blind.csv`
+
+These checked-in files intentionally exclude A1 labels, current semantic labels, strict B0 decisions, matched bucket IDs, false-negative reasons, and recall summaries. Annotator 2 should receive only the files in `oracle/annotator2_packet/`.
+
+## Semantic Labels
+
+`annotator_1_semantic_label` and `annotator_2_semantic_label` use:
+
+- `MV-SI`
+- `SV-SI`
+- `ISU-other`
+- `other-logical-bug`
+- `ambiguous`
+- `excluded`
+
+Label `MV-SI` if and only if all of the following hold:
+
+1. There are `n >= 2` semantically coupled state entities.
+2. Coupling is justified by independent evidence such as a protocol invariant, bug report, accounting equation, developer note, or developer rule.
+3. An execution path updates, advances, invalidates, or consumes one constituent without synchronizing at least one required counterpart.
+4. The stale or inconsistent counterpart reaches a security- or economically-relevant sink.
+5. The defect is not reducible to a same-variable stale read, reentrancy, ordinary missing access control, or arithmetic error.
+
+Label `SV-SI` for same-variable stale or inconsistent-state issues without a multi-entity relational invariant.
+
+Label `ISU-other` for inconsistent-state-update issues that are broader than, or distinguishable from, `MV-SI` and `SV-SI`.
+
+## Strict B0 Matching Rule
 
 Let `o` be an oracle bug and `b` be an MV-Scan B0 bucket. `b` strictly matches `o` if and only if all of the following hold:
 
@@ -68,7 +155,9 @@ Let `o` be an oracle bug and `b` be an MV-Scan B0 bucket. `b` strictly matches `
 4. Same desynchronization step.
 5. Same sink decision class.
 
-This is intentionally stricter than ordinary semantic similarity. A bucket should not be counted as a strict match merely because it appears in the same repository, mentions one overlapping state entity, or reaches the same broad sink type. The main paper reports:
+This is stricter than ordinary semantic similarity. A bucket is not a strict match merely because it appears in the same repository, mentions one overlapping state entity, or reaches the same broad sink type.
+
+The reported metric is:
 
 ```text
 strict known-MVSI recall_B0 =
@@ -77,16 +166,6 @@ strict known-MVSI recall_B0 =
 | known MV-SI oracle cases in evaluated repositories |
 ```
 
-## Diagnostic B0 overlap rule
+## Diagnostic B0 Overlap
 
-> Diagnostic overlap is used for artifact analysis and false-negative explanation, not for the main recall number.
-
-Let `o` be an oracle bug and `b` be an MV-Scan B0 bucket. `b` has diagnostic overlap with `o` if all of the following hold:
-
-1. `o` and `b` come from the same evaluated repository.
-2. The invariant violated by `o` is the same as, related to, or a direct specialization of the invariant represented by `b`.
-3. At least one state variable, mapping slot, or external proxy in `o` appears in `b`'s entangled group.
-4. `b` identifies at least one writer, reader, or transaction step involved in the known exploit or bug trace.
-5. `b`'s stale-read sink corresponds to the same class of protocol decision: branch, accounting update, external call, storage write, mint, burn, transfer, liquidation, reward, governance, or access-control decision.
-
-Diagnostic overlap distinguishes: (i) strict true matches, (ii) near misses where MV-Scan found the right state group but not the right path, (iii) near misses where MV-Scan found the right sink class but not the full invariant, (iv) false negatives caused by coarse bucketing, and (v) unrelated same-repository alerts.
+Diagnostic overlap may be used for false-negative explanation and artifact debugging, but it is not part of the main recall number.

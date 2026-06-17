@@ -59,12 +59,8 @@ TODO.md
 FULL_TODO.md
 OBJECTIONS
 
-# Manual oracle audit notes; canonical review data lives in CSVs.
-oracle/audits/TOSEM_manual_audit.md
-oracle/audits/web3bugs_semantic_label_audit.md
-oracle/audits/web3bugs_mvbench_manual_audit.md
+# Oracle audit scratch/prose; canonical TOSEM queue lives at oracle/tosem_oracle_review_queue.csv.
+oracle/audits/*
 
 # Local scaffolding for the checked-in Annotator 2 handoff packet.
 oracle/scripts/build_annotator2_packet.py
-oracle/zero_day_annotation_reliability.csv
-oracle/b0_stratified_sample_reliability.csv
